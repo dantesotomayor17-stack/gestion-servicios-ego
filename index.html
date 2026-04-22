@@ -6,6 +6,7 @@
     <title>Generador de Servicios e.go</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Estilos originales de Dante */
         @media print {
             body { background-color: white; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             #ui-container { display: none !important; }
@@ -13,6 +14,7 @@
             .no-print { display: none !important; }
             @page { size: letter portrait; margin: 0.5cm; } 
         }
+
         #print-container { display: none; width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: black; background-color: white; padding: 30px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .hoja-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .title-section { text-align: center; margin-bottom: 12px; }
@@ -26,6 +28,7 @@
         .table-container th { text-align: center; background-color: #f3f4f6; padding: 3px; }
         .col-desc { width: 40%; font-weight: bold; }
         .col-actividades { width: 15%; text-align: center !important; font-weight: bold; }
+        .col-sino { width: 15%; text-align: center !important; font-weight: bold; }
         .col-persona { width: 30%; }
         .footer-info { margin-top: 20px; font-size: 10px; text-align: center; line-height: 1.2; }
         .hidden { display: none !important; }
@@ -40,49 +43,60 @@
                     <path d="M 500,70 C 700,10 850,110 1050,40" fill="none" stroke="#ff6d01" stroke-width="32" stroke-linecap="round" />
                     <path d="M 530,90 C 720,30 870,130 1050,60" fill="none" stroke="#ff6d01" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
                 </svg>
+                
                 <div class="relative z-10">
                     <h1 class="text-2xl font-black drop-shadow-sm text-slate-900 uppercase">GESTIÓN DE SERVICIOS</h1>
-                    <p class="text-slate-800 text-sm mt-1 font-bold">Generador y registro de órdenes NUBE.</p>
+                    <p class="text-slate-800 text-sm mt-1 font-bold drop-shadow-sm">Generador y registro de órdenes.</p>
                 </div>
+                
                 <div class="relative z-10 bg-white w-32 h-32 rounded-xl shadow-lg border border-green-200 flex flex-col items-center justify-center text-center p-2 shrink-0">
-                    <div style="font-family: 'Arial Black', Impact, sans-serif; font-size: 54px; line-height: 0.8; letter-spacing: -3.5px; margin-bottom: 12px; text-align: center;">
-                        <span style="color: #1a7b3e;">e</span><span style="color: #1a7b3e; font-size: 26px; vertical-align: middle; margin: 0 1px;">●</span><span style="color: #c1272d;">g</span><span style="color: #1a7b3e;">o</span>
+                    <div style="display: inline-flex; flex-direction: column; align-items: stretch;">
+                        <div style="font-family: 'Arial Black', Impact, sans-serif; font-size: 54px; line-height: 0.8; letter-spacing: -3.5px; margin-bottom: 12px; text-align: center;">
+                            <span style="color: #1a7b3e;">e</span><span style="color: #1a7b3e; font-size: 26px; vertical-align: middle; margin: 0 1px; position: relative; top: -5px;">●</span><span style="color: #c1272d;">g</span><span style="color: #1a7b3e;">o</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-family: 'Arial Narrow', Arial, sans-serif; font-size: 4.5px; font-weight: 900; color: #6d6e71; transform: scaleY(1.2); transform-origin: top; width: 100%;">
+                            <span>GAS</span><span>ELECTRO</span><span>MOVILIDAD</span><span>SUSTENTADA</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="flex border-b border-slate-200 bg-slate-50 px-6">
-                <button onclick="cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">Nuevo Servicio</button>
-                <button onclick="cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 font-bold focus:outline-none transition-colors">Historial Compartido</button>
+                <button onclick="cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">
+                    Nuevo Servicio
+                </button>
+                <button onclick="cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors">
+                    Historial de Registros
+                </button>
             </div>
 
             <div id="vista-nuevo">
-                <form id="serviceForm" class="p-6" onsubmit="procesarYGuardar(event)">
+                <form id="serviceForm" class="p-6" onsubmit="generarYGuardarEnNube(event)">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label>
-                            <input type="text" id="inputEco" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. 3451" required>
+                            <input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. ECO-01">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label>
-                            <input type="date" id="inputFecha" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500" required>
+                            <input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label>
-                            <input type="text" id="inputBase" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. 310" required>
+                            <input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. BASE NORTE">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">MECÁNICO</label>
-                            <input type="text" id="inputMecanico" class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. DAMIAN" required>
+                            <input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. LUIS">
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-center mb-4 border-b pb-2">
-                        <h3 class="text-lg font-bold text-slate-800">Servicios a Realizar</h3>
-                        <div class="bg-blue-50 px-3 py-2 rounded-lg border border-blue-200">
-                            <label class="text-sm font-bold text-blue-900">Grupo Mtto:</label>
-                            <select id="selectPaqueteM" onchange="aplicarPaquete()" class="font-bold border rounded ml-2">
-                                <option value="">- Manual -</option>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 border-b pb-2 gap-4">
+                        <h3 class="text-lg font-bold text-slate-800">Seleccionar Servicios a Realizar</h3>
+                        <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm">
+                            <label for="selectPaqueteM" class="text-sm font-bold text-blue-900">Grupo de Mtto:</label>
+                            <select id="selectPaqueteM" onchange="aplicarPaquete()" class="px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
+                                <option value="">- Seleccionar (Manual) -</option>
                                 <option value="M1">Grupo M1</option>
                                 <option value="M2">Grupo M2</option>
                                 <option value="M3">Grupo M3</option>
@@ -96,74 +110,91 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container"></div>
 
                     <div class="flex justify-end gap-4 border-t pt-6">
-                        <button type="button" onclick="limpiarFormularioCompleto()" class="px-6 py-2 border rounded text-slate-600 font-semibold">Limpiar</button>
-                        <button type="submit" class="px-8 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md">Generar y Guardar en Nube</button>
+                        <button type="button" onclick="limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
+                        <button type="submit" class="px-8 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">
+                            Generar y Guardar Nube
+                        </button>
                     </div>
                 </form>
             </div>
 
             <div id="vista-historial" class="hidden p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-800">Registros en Tiempo Real</h2>
-                    <div class="flex gap-2">
-                        <input type="text" id="buscadorHistorial" onkeyup="filtrarHistorial()" placeholder="Buscar Económico..." class="border rounded-lg px-3 py-1 text-sm">
-                        <button onclick="descargarExcel()" class="bg-green-600 text-white px-4 py-1 rounded-lg text-sm font-bold">Excel</button>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <h2 class="text-xl font-bold text-slate-800">Servicios Registrados (Compartido)</h2>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="relative w-full sm:w-64">
+                            <input type="text" id="buscadorHistorial" onkeyup="filtrarHistorial()" placeholder="Buscar Económico..." class="block w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                        </div>
+                        <button onclick="descargarExcel()" class="px-4 py-2 bg-green-600 text-white font-bold rounded-lg text-sm">Descargar Excel</button>
                     </div>
                 </div>
-                <div class="overflow-x-auto border rounded-lg">
+                <div class="overflow-x-auto rounded-lg border border-slate-200">
                     <table class="min-w-full divide-y divide-slate-200 text-sm">
                         <thead class="bg-slate-50">
                             <tr>
-                                <th class="px-4 py-3 text-left">Fecha</th>
-                                <th class="px-4 py-3 text-left">Económico</th>
-                                <th class="px-4 py-3 text-left">Base/Mec</th>
-                                <th class="px-4 py-3 text-left w-1/2">Servicios</th>
-                                <th class="px-4 py-3 text-right">Acción</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600">Fecha</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600">Económico</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600">Base / Mecánico</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600 w-1/2">Servicios Realizados</th>
+                                <th class="px-4 py-3 text-right font-bold text-slate-600">Acción</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-historial-body" class="bg-white divide-y divide-slate-200"></tbody>
                     </table>
                 </div>
-                <p id="mensaje-vacio" class="text-center text-slate-500 mt-6 hidden">No hay registros todavía.</p>
+                <p id="mensaje-vacio" class="text-center text-slate-500 mt-6 hidden">No hay registros guardados todavía.</p>
             </div>
         </div>
     </div>
 
     <div id="print-container">
-        <div class="no-print flex justify-center gap-4 mb-8">
-            <button onclick="volverUI()" class="bg-slate-500 text-white px-6 py-2 rounded font-bold">⬅️ Volver</button>
-            <button onclick="window.print()" class="bg-green-600 text-white px-8 py-2 rounded font-black shadow-md">IMPRIMIR HOJA</button>
+        <div class="no-print flex justify-center gap-4 mb-8 p-4 bg-slate-100 border border-slate-300 rounded-lg">
+            <button onclick="volverUI()" class="px-6 py-2 bg-slate-500 text-white rounded font-bold hover:bg-slate-600">⬅️ Volver</button>
+            <button onclick="window.print()" class="px-8 py-2 bg-green-600 text-white rounded font-black hover:bg-green-700 shadow-md transition-colors text-lg">IMPRIMIR HOJA</button>
         </div>
+
         <div class="hoja-header">
-            <div style="font-family: 'Arial Black', sans-serif; font-size: 65px; line-height: 0.8; letter-spacing: -4.5px;">
-                <span style="color: #1a7b3e;">e</span><span style="color: #1a7b3e; font-size: 32px; vertical-align: middle;">●</span><span style="color: #c1272d;">g</span><span style="color: #1a7b3e;">o</span>
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: center;">
+                <div style="display: inline-flex; flex-direction: column; align-items: stretch;">
+                    <div style="font-family: 'Arial Black', Impact, sans-serif; font-size: 65px; line-height: 0.8; letter-spacing: -4.5px; margin-bottom: 14px; text-align: center;">
+                        <span style="color: #1a7b3e;">e</span><span style="color: #1a7b3e; font-size: 32px; vertical-align: middle; margin: 0 3px; position: relative; top: -6px;">●</span><span style="color: #c1272d;">g</span><span style="color: #1a7b3e;">o</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-family: 'Arial Narrow', Arial, sans-serif; font-size: 5.5px; font-weight: 900; color: #6d6e71; transform: scaleY(1.2); transform-origin: top; width: 100%;">
+                        <span>GAS</span><span>ELECTRO</span><span>MOVILIDAD</span><span>SUSTENTADA</span>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="title-section"><h1>DESCRIPCIÓN DEL SERVICIO.</h1></div>
+
         <div class="info-row">
             <div class="info-field"><span>ECONOMICO.</span> <span class="info-line" id="print-eco" style="width: 50px;"></span></div>
             <div class="info-field"><span>FECHA.</span> <span class="info-line" id="print-fecha" style="width: 80px;"></span></div>
             <div class="info-field"><span>BASE.</span> <span class="info-line" id="print-base" style="width: 80px;"></span></div>
         </div>
+
         <table class="table-container">
             <thead>
                 <tr>
                     <th class="col-desc">DESCRIPCION DEL SERVICIO.</th>
-                    <th class="col-actividades">ACTIVIDADES</th>
-                    <th class="col-sino">REALIZADAS</th>
-                    <th class="col-persona">REVISÓ</th>
+                    <th class="col-actividades">ACTIVIDADES A REALIZAR</th>
+                    <th class="col-sino">ACTIVIDADES REALIZADAS</th>
+                    <th class="col-persona">PERSONA QUE REALIZO Y/O REVISO</th>
                 </tr>
             </thead>
             <tbody id="print-table-body"></tbody>
         </table>
-        <div class="footer-info"><strong>PRIV. SIN NOMBRE #101</strong>, SAN NICOLAS DE LOS GARZA, N.L.</div>
+
+        <div class="footer-info">
+            <strong>PRIV. SIN NOMBRE #101</strong>, SAN NICOLAS DE LOS GARZA, N.L.
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIGURACIÓN DE DANTE
         const firebaseConfig = {
             apiKey: "AIzaSyDLywqH8iBbnlSwwRFhWVbZ4mjEkz6Xs_8",
             authDomain: "gestion-servicios-ego.firebaseapp.com",
@@ -197,49 +228,51 @@
             "M3": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL", "APRIETE DE TERMINALES"],
             "M4": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "%DEGRADO DE ANTICONGELANTE", "NIVEL DE ANTICONGELANTE", "CAMBIO DE ANTICONGELANTE"],
             "M5": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO DE SECADOR COMPLETO", "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"],
-            "M6": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION de BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "CAMBIO DE FILTRO HIDRAULICO"]
+            "M6": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "CAMBIO DE FILTRO HIDRAULICO"]
         };
 
-        let datosNube = [];
+        let db_historial = [];
 
-        window.addEventListener("DOMContentLoaded", () => {
-            const container = document.getElementById('checkbox-container');
-            listaServicios.forEach((s, i) => {
-                const div = document.createElement('div');
-                div.className = "flex items-start gap-2 hover:bg-blue-50 p-1 rounded";
-                div.innerHTML = `<input type="checkbox" id="chk_${i}"><label for="chk_${i}" class="text-sm cursor-pointer">${s}</label>`;
-                container.appendChild(div);
-            });
-            document.getElementById('inputFecha').value = new Date().toISOString().slice(0, 10);
-            
-            // ESCUCHAR NUBE
-            const q = query(serviciosRef, orderBy("timestamp", "desc"));
-            onSnapshot(q, (snaps) => {
-                const tbody = document.getElementById('tabla-historial-body');
-                tbody.innerHTML = '';
-                datosNube = snaps.docs.map(d => ({id: d.id, ...d.data()}));
-                if(datosNube.length === 0) document.getElementById('mensaje-vacio').classList.remove('hidden');
-                else document.getElementById('mensaje-vacio').classList.add('hidden');
+        // Hacer funciones accesibles desde el HTML
+        window.cambiarPestana = (p) => {
+            const vNuevo = document.getElementById('vista-nuevo');
+            const vHistorial = document.getElementById('vista-historial');
+            const btnNuevo = document.getElementById('tab-btn-nuevo');
+            const btnHistorial = document.getElementById('tab-btn-historial');
+            vNuevo.classList.toggle('hidden', p !== 'nuevo');
+            vHistorial.classList.toggle('hidden', p !== 'historial');
+            btnNuevo.className = p === 'nuevo' ? "py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors" : "py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors";
+            btnHistorial.className = p === 'historial' ? "py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors" : "py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors";
+        };
 
-                datosNube.forEach(reg => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="px-4 py-3">${reg.fecha}</td>
-                        <td class="px-4 py-3 font-bold">${reg.economico}</td>
-                        <td class="px-4 py-3 text-xs"><b>${reg.base}</b><br>${reg.mecanico}</td>
-                        <td class="px-4 py-3 text-xs"><b>${reg.grupo}</b>: ${reg.servicios.join(', ')}</td>
-                        <td class="px-4 py-3 text-right"><button onclick="eliminar('${reg.id}')" class="text-red-500 font-bold">X</button></td>
-                    `;
-                    tbody.appendChild(tr);
+        window.aplicarPaquete = () => {
+            const p = document.getElementById('selectPaqueteM').value;
+            listaServicios.forEach((_, i) => document.getElementById(`chk_${i}`).checked = false);
+            if(p && configPaquetes[p]) {
+                configPaquetes[p].forEach(s => {
+                    const idx = listaServicios.indexOf(s);
+                    if(idx !== -1) document.getElementById(`chk_${idx}`).checked = true;
                 });
-            });
-        });
+            }
+        };
 
-        window.procesarYGuardar = async (e) => {
+        window.limpiarFormularioCompleto = () => {
+            document.getElementById('serviceForm').reset();
+            document.getElementById('inputFecha').value = new Date().toISOString().slice(0, 10);
+            document.getElementById('selectPaqueteM').value = "";
+        };
+
+        window.volverUI = () => {
+            document.getElementById('ui-container').style.display = 'block';
+            document.getElementById('print-container').style.display = 'none';
+        };
+
+        // --- LÓGICA DE NUBE ---
+        window.generarYGuardarEnNube = async (e) => {
             e.preventDefault();
             const marcados = [];
             listaServicios.forEach((s, i) => { if(document.getElementById(`chk_${i}`).checked) marcados.push(s); });
-            if(marcados.length === 0) return alert("Selecciona servicios.");
+            if(marcados.length === 0) return alert("Selecciona al menos un servicio.");
 
             const registro = {
                 economico: document.getElementById('inputEco').value.toUpperCase(),
@@ -247,54 +280,80 @@
                 base: document.getElementById('inputBase').value.toUpperCase(),
                 mecanico: document.getElementById('inputMecanico').value.toUpperCase(),
                 servicios: marcados,
-                grupo: document.getElementById('selectPaqueteM').value || "Personalizado",
+                grupo: document.getElementById('selectPaqueteM').options[document.getElementById('selectPaqueteM').selectedIndex].text,
                 timestamp: Date.now()
             };
 
             await addDoc(serviciosRef, registro);
-            prepararImpresion(registro);
+            mostrarImpresion(registro);
         };
 
         window.eliminar = async (id) => { if(confirm("¿Borrar para todos?")) await deleteDoc(doc(db, "servicios", id)); };
-        window.aplicarPaquete = () => {
-            const p = document.getElementById('selectPaqueteM').value;
-            listaServicios.forEach((_, i) => document.getElementById(`chk_${i}`).checked = false);
-            if(p) configPaquetes[p].forEach(s => { 
-                const idx = listaServicios.indexOf(s); 
-                if(idx !== -1) document.getElementById(`chk_${idx}`).checked = true; 
+
+        // ESCUCHAR CAMBIOS EN TIEMPO REAL
+        onSnapshot(query(serviciosRef, orderBy("timestamp", "desc")), (snaps) => {
+            const tbody = document.getElementById('tabla-historial-body');
+            tbody.innerHTML = '';
+            db_historial = snaps.docs.map(d => ({id: d.id, ...d.data()}));
+            
+            if(db_historial.length === 0) document.getElementById('mensaje-vacio').classList.remove('hidden');
+            else document.getElementById('mensaje-vacio').classList.add('hidden');
+
+            db_historial.forEach(reg => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-4">${reg.fecha}</td>
+                    <td class="px-4 py-4 font-bold text-slate-900">${reg.economico}</td>
+                    <td class="px-4 py-4 text-slate-700"><b>${reg.base}</b><br><span class="text-xs">Mec: ${reg.mecanico}</span></td>
+                    <td class="px-4 py-4"><span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-0.5 rounded">${reg.grupo}</span><ul class="text-xs text-slate-600 mt-2">${reg.servicios.map(s => `<li>• ${s}</li>`).join('')}</ul></td>
+                    <td class="px-4 py-4 text-right"><button onclick="eliminar('${reg.id}')" class="text-red-500 font-bold px-2 py-1 bg-red-50 rounded">Borrar</button></td>
+                `;
+                tbody.appendChild(tr);
             });
-        };
-        window.cambiarPestana = (p) => {
-            document.getElementById('vista-nuevo').classList.toggle('hidden', p !== 'nuevo');
-            document.getElementById('vista-historial').classList.toggle('hidden', p !== 'historial');
-        };
-        function prepararImpresion(reg) {
+        });
+
+        function mostrarImpresion(reg) {
             document.getElementById('print-eco').innerText = reg.economico;
             document.getElementById('print-fecha').innerText = reg.fecha;
             document.getElementById('print-base').innerText = reg.base;
-            const tb = document.getElementById('print-table-body'); tb.innerHTML = '';
+            const tBody = document.getElementById('print-table-body');
+            tBody.innerHTML = '';
             listaServicios.forEach(s => {
                 const ok = reg.servicios.includes(s);
-                tb.innerHTML += `<tr><td>${s}</td><td class="text-center">${ok?'✓':''}</td><td></td><td class="text-center" style="font-size:8px">${ok?reg.mecanico:''}</td></tr>`;
+                tBody.innerHTML += `<tr><td>${s}</td><td class="text-center">${ok?'✓':''}</td><td></td><td class="text-center font-bold" style="font-size:8px">${ok?reg.mecanico:''}</td></tr>`;
             });
             document.getElementById('ui-container').style.display = 'none';
             document.getElementById('print-container').style.display = 'block';
         }
-        window.volverUI = () => { document.getElementById('ui-container').style.display = 'block'; document.getElementById('print-container').style.display = 'none'; };
-        window.limpiarFormularioCompleto = () => { document.getElementById('serviceForm').reset(); aplicarPaquete(); };
-        window.descargarExcel = () => {
-            let csv = '\uFEFFFECHA,ECONOMICO,BASE,MECANICO,GRUPO,SERVICIOS\n';
-            datosNube.forEach(r => csv += `"${r.fecha}","${r.economico}","${r.base}","${r.mecanico}","${r.grupo}","${r.servicios.join(' / ')}"\n`);
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "Historial_Nube.csv";
-            link.click();
-        };
+
+        // --- INICIALIZACIÓN ---
+        window.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById('checkbox-container');
+            listaServicios.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "flex items-start gap-2 hover:bg-blue-50 p-1 rounded";
+                div.innerHTML = `<input type="checkbox" id="chk_${i}"><label for="chk_${i}" class="text-sm cursor-pointer select-none">${s}</label>`;
+                container.appendChild(div);
+            });
+            document.getElementById('inputFecha').value = new Date().toISOString().slice(0, 10);
+        });
+
+        // Filtrar y Excel (Adaptados a Nube)
         window.filtrarHistorial = () => {
             const f = document.getElementById("buscadorHistorial").value.toUpperCase();
             const filas = document.querySelectorAll("#tabla-historial-body tr");
             filas.forEach(fila => fila.style.display = fila.cells[1].innerText.includes(f) ? "" : "none");
+        };
+
+        window.descargarExcel = () => {
+            let csv = '\uFEFFFECHA,ECONOMICO,BASE,MECANICO,GRUPO,SERVICIOS\n';
+            db_historial.forEach(r => csv += `"${r.fecha}","${r.economico}","${r.base}","${r.mecanico}","${r.grupo}","${r.servicios.join(' / ')}"\n`);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Historial_e_go_COMPARTIDO.csv";
+            link.click();
         };
     </script>
 </body>
