@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Servicios e.go</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos específicos para la vista de impresión */
+        @media print {
+            body { background-color: white; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            #ui-container { display: none !important; }
+            #print-container { display: block !important; padding: 0 !important; box-shadow: none !important; }
+            .no-print { display: none !important; }
+            /* Forzar tamaño carta y márgenes pequeños para que quepa en 1 hoja */
+            @page { size: letter portrait; margin: 0.5cm; } 
+        }
+
+        /* Estilos para replicar la hoja física */
+        #print-container { display: none; width: 100%; max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: black; background-color: white; padding: 30px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .hoja-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .logo-text { font-weight: bold; font-size: 24px; color: #1e3a8a; }
+        .logo-green { color: #15803d; }
+        
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .title-section h1 { font-size: 18px; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+        
+        .info-row { display: flex; justify-content: flex-start; gap: 2px; margin-bottom: 10px; font-size: 12px; font-weight: bold; }
+        .info-field { display: flex; align-items: flex-end; }
+        .info-field span:first-child { margin-right: 2px; margin-left: 6px; }
+        .info-field:first-child span:first-child { margin-left: 0; }
+        .info-line { border-bottom: 1px solid black; display: inline-block; text-align: center; }
+        
+        .table-container { border: 2px solid black; width: 100%; border-collapse: collapse; }
+        .table-container th, .table-container td { border: 1px solid black; padding: 3px 4px; font-size: 10px; text-align: left; line-height: 1.15; }
+        .table-container th { text-align: center; background-color: #f3f4f6; padding: 3px; }
+        
+        /* Ajuste de columnas actualizado */
+        .col-desc { width: 45%; font-weight: bold; }
+        .col-actividades { width: 15%; text-align: center !important; font-weight: bold; }
+        .col-sino { width: 10%; text-align: center !important; font-weight: bold; }
+        .col-persona { width: 30%; }
+
+        .footer-info { margin-top: 20px; font-size: 10px; text-align: center; line-height: 1.2; }
+        
+        /* Ocultar elementos en la interfaz web */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+
+    <div id="ui-container" class="max-w-4xl mx-auto p-6">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Encabezado de la App -->
+            <div class="relative bg-[#10c86f] p-6 text-slate-900 flex justify-between items-center overflow-hidden">
+                <!-- Raya naranja tipo trazo libre (Fondo) -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-90" preserveAspectRatio="none" viewBox="0 0 1000 100">
+                    <path d="M 500,70 C 700,10 850,110 1050,40" fill="none" stroke="#ff6d01" stroke-width="32" stroke-linecap="round" />
+                    <path d="M 530,90 C 720,30 870,130 1050,60" fill="none" stroke="#ff6d01" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
+                </svg>
+                
+                <div class="relative z-10">
+                    <h1 class="text-2xl font-black drop-shadow-sm text-slate-900 uppercase">GESTIÓN DE SERVICIOS</h1>
+                    <p class="text-slate-800 text-sm mt-1 font-bold drop-shadow-sm">Generador y registro de órdenes.</p>
+                </div>
+                
+                <!-- Reemplazo de Golden Dragon por e.go (formato placa blanca ajustado al logo) -->
+                <div class="relative z-10 bg-white w-32 h-32 rounded-xl shadow-lg border border-green-200 flex flex-col items-center justify-center text-center p-2 shrink-0">
+                    <div style="display: inline-flex; flex-direction: column; align-items: stretch;">
+                        <div style="font-family: 'Arial Black', Impact, sans-serif; font-size: 54px; line-height: 0.8; letter-spacing: -3.5px; margin-bottom: 12px; text-align: center;">
+                            <span style="color: #1a7b3e;">e</span><span style="color: #1a7b3e; font-size: 26px; vertical-align: middle; margin: 0 1px; position: relative; top: -5px;">●</span><span style="color: #c1272d;">g</span><span style="color: #1a7b3e;">o</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-family: 'Arial Narrow', Arial, sans-serif; font-size: 4.5px; font-weight: 900; color: #6d6e71; transform: scaleY(1.2); transform-origin: top; width: 100%;">
+                            <span>GAS</span><span>ELECTRO</span><span>MOVILIDAD</span><span>SUSTENTADA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestañas de Navegación -->
+            <div class="flex border-b border-slate-200 bg-slate-50 px-6">
+                <button onclick="cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">
+                    Nuevo Servicio
+                </button>
+                <button onclick="cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors">
+                    Historial de Registros
+                </button>
+            </div>
+
+            <!-- CONTENEDOR 1: NUEVO SERVICIO -->
+            <div id="vista-nuevo">
+                <form id="serviceForm" class="p-6" onsubmit="generarHoja(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label>
+                            <input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. ECO-01">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label>
+                            <input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label>
+                            <input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. BASE NORTE">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">MECÁNICO</label>
+                            <input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. LUIS">
+                        </div>
+                    </div>
+
+                    <!-- Cabecera de Selección con Auto-Selector -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 border-b pb-2 gap-4">
+                        <h3 class="text-lg font-bold text-slate-800">Seleccionar Servicios a Realizar</h3>
+                        
+                        <!-- SELECTOR DE GRUPOS (M1, M2...) -->
+                        <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm">
+                            <label for="selectPaqueteM" class="text-sm font-bold text-blue-900">Grupo de Mtto:</label>
+                            <select id="selectPaqueteM" onchange="aplicarPaquete()" class="px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
+                                <option value="">- Seleccionar (Manual) -</option>
+                                <option value="M1">Grupo M1</option>
+                                <option value="M2">Grupo M2</option>
+                                <option value="M3">Grupo M3</option>
+                                <option value="M4">Grupo M4</option>
+                                <option value="M5">Grupo M5</option>
+                                <option value="M6">Grupo M6</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container">
+                        <!-- Checkboxes generados por JS -->
+                    </div>
+
+                    <div class="flex justify-end gap-4 border-t pt-6">
+                        <button type="button" onclick="limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
+                        <button type="submit" class="px-8 py-2 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Generar y Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CONTENEDOR 2: HISTORIAL -->
+            <div id="vista-historial" class="hidden p-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <h2 class="text-xl font-bold text-slate-800">Servicios Registrados</h2>
+                    
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <!-- Buscador de Unidades -->
+                        <div class="relative w-full sm:w-64">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <input type="text" id="buscadorHistorial" onkeyup="filtrarHistorial()" placeholder="Buscar Económico..." class="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm outline-none transition-shadow">
+                        </div>
+
+                        <button onclick="descargarExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow flex items-center gap-2 transition-colors whitespace-nowrap text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Descargar Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto rounded-lg border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600">Fecha</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600">Económico</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600">Base / Mecánico</th>
+                                <th class="px-4 py-3 text-left font-bold text-slate-600 w-1/2">Servicios Realizados</th>
+                                <th class="px-4 py-3 text-right font-bold text-slate-600">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-historial-body" class="bg-white divide-y divide-slate-200">
+                            <!-- Filas del historial inyectadas por JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <p id="mensaje-vacio" class="text-center text-slate-500 mt-6 hidden">No hay registros guardados todavía.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA DE IMPRESIÓN (OCULTA EN PANTALLA, VISIBLE AL IMPRIMIR) -->
+    <div id="print-container">
+        <div class="no-print flex justify-center gap-4 mb-8 p-4 bg-slate-100 border border-slate-300 rounded-lg">
+            <button onclick="volverUI()" class="px-6 py-2 bg-slate-500 text-white rounded font-bold hover:bg-slate-600 transition-colors shadow-sm">⬅️ Volver</button>
+            <button onclick="window.print()" class="px-8 py-2 bg-green-600 text-white rounded font-black hover:bg-green-700 shadow-md transition-colors text-lg flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                IMPRIMIR HOJA
+            </button>
+        </div>
+
+        <div class="hoja-header">
+            <!-- Logo e.go original (Izquierda) -->
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: center;">
+                <div style="display: inline-flex; flex-direction: column; align-items: stretch;">
+                    <div style="font-family: 'Arial Black', Impact, sans-serif; font-size: 65px; line-height: 0.8; letter-spacing: -4.5px; margin-bottom: 14px; text-align: center;">
+                        <span style="color: #1a7b3e;">e</span><span style="color: #1a7b3e; font-size: 32px; vertical-align: middle; margin: 0 3px; position: relative; top: -6px;">●</span><span style="color: #c1272d;">g</span><span style="color: #1a7b3e;">o</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-family: 'Arial Narrow', Arial, sans-serif; font-size: 5.5px; font-weight: 900; color: #6d6e71; transform: scaleY(1.2); transform-origin: top; width: 100%;">
+                        <span>GAS</span><span>ELECTRO</span><span>MOVILIDAD</span><span>SUSTENTADA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="title-section">
+            <h1>DESCRIPCIÓN DEL SERVICIO.</h1>
+        </div>
+
+        <div class="info-row">
+            <div class="info-field"><span>ECONOMICO.</span> <span class="info-line" id="print-eco" style="width: 50px;"></span></div>
+            <div class="info-field"><span>FECHA.</span> <span class="info-line" id="print-fecha" style="width: 80px;"></span></div>
+            <div class="info-field"><span>KILOMETROS.</span> <span class="info-line" id="print-km" style="width: 120px;"></span></div>
+            <div class="info-field"><span>BASE.</span> <span class="info-line" id="print-base" style="width: 80px;"></span></div>
+        </div>
+
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th class="col-desc">DESCRIPCION DEL SERVICIO.</th>
+                    <th class="col-actividades">ACTIVIDADES A<br>REALIZAR</th>
+                    <th class="col-sino">SI/NO</th>
+                    <th class="col-persona">PERSONA QUE REALIZO Y/O<br>REVISO</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body">
+                </tbody>
+        </table>
+
+        <!-- Sección de Comentarios -->
+        <div style="margin-top: 15px;">
+            <div style="font-weight: bold; font-size: 11px; letter-spacing: 1px; padding-left: 2px;">COMENTARIOS.</div>
+            <div style="display: flex; flex-direction: column;">
+                <div style="border-bottom: 1px solid black; height: 26px;"></div> 
+                <div style="border-bottom: 1px solid black; height: 26px;"></div>
+                <div style="border-bottom: 1px solid black; height: 26px;"></div>
+                <div style="border-bottom: 1px solid black; height: 26px;"></div>
+            </div>
+        </div>
+
+        <div class="footer-info"> 
+            <strong>PRIV. SIN NOMBRE #101</strong><br>
+            COL. TORRES DE SANTO DOMINGO<br>
+            SAN NICOLAS DE LOS GARZA, N.L.<br>
+            C.P. 66440
+        </div>
+    </div>
+
+    <script>
+        const listaServicios = [
+            "CAMBIO DE ACEITE DE MOTOR",
+            "CAMBIO DE FILTRO DE ACEITE MOTOR",
+            "CAMBIO DE FILTRO DE AIRE",
+            "FILTRO DE GAS DE ALTA PRESION",
+            "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
+            "FILTRO DE GAS BAJA PRESION ZONA MOTOR",
+            "%DEGRADO DE ANTICONGELANTE",
+            "NIVEL DE ANTICONGELANTE",
+            "NIVEL ACEITE DE TRANSMISION",
+            "CAMBIO ACEITE TRANSMISION",
+            "CAMBIO FILTROS DE TRANSMISION",
+            "REVISION NIVEL ACEITE DIFERENCIAL",
+            "CAMBIO DE ACEITE DIFERENCIAL",
+            "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+            "ENGRASADO PUERTAS SERVICIO TRASERAS",
+            "ENGRASADO POLEAS TENSORAS A.A",
+            "ENGRASADO DE CRUCETAS BARRA CARDAN",
+            "ENGRASADO PERNO DE DIRECCION",
+            "ENGRASADO DE TERMINALES DE DIRECCION",
+            "ENGRASADO DE MATRACAS",
+            "CAMBIO DE ANTICONGELANTE",
+            "REVISION DE BALEROS",
+            "CAMBIO DE BALEROS",
+            "REVISION DE BALATAS",
+            "CAMBIO DE BALATAS TRASERAS",
+            "CAMBIO DE BALATAS DELANTERAS",
+            "CAMBIO DE FILTRO HIDRAULICO",
+            "CAMBIO DE FILTRO DE SECADOR",
+            "CAMBIO DE SECADOR COMPLETO",
+            "APRIETE DE TERMINALES",
+            "REVISION SEMESTRAL DE CLIMA",
+            "REVISION DE SISTEMA ELECTRICO",
+            "CAMBIO DE CABLES Y BUJIAS"
+        ];
+
+        /* =========================================================
+           AQUÍ PUEDES CONFIGURAR QUÉ INCLUYE CADA PAQUETE "M"
+           Solo asegúrate de escribir el nombre del servicio EXACTAMENTE
+           igual a como aparece en la lista de arriba.
+           ========================================================= */
+        const configuracionPaquetes = {
+            "M1": [
+                "CAMBIO DE ACEITE DE MOTOR",
+                "CAMBIO DE FILTRO DE ACEITE MOTOR",
+                "CAMBIO DE FILTRO DE AIRE",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+                "ENGRASADO PUERTAS SERVICIO TRASERAS",
+                "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN",
+                "ENGRASADO PERNO DE DIRECCION",
+                "ENGRASADO DE TERMINALES DE DIRECCION",
+                "ENGRASADO DE MATRACAS",
+                "REVISION DE BALATAS",
+                "CAMBIO DE BALATAS DELANTERAS",
+                "CAMBIO DE BALATAS TRASERAS",
+                "REVISION SEMESTRAL DE CLIMA"
+            ],
+            "M2": [
+                "CAMBIO DE ACEITE DE MOTOR",
+                "CAMBIO DE FILTRO DE ACEITE MOTOR",
+                "CAMBIO DE FILTRO DE AIRE",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+                "ENGRASADO PUERTAS SERVICIO TRASERAS",
+                "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN",
+                "ENGRASADO PERNO DE DIRECCION",
+                "ENGRASADO DE TERMINALES DE DIRECCION",
+                "ENGRASADO DE MATRACAS",
+                "REVISION DE BALATAS",
+                "REVISION DE BALEROS",
+                "CAMBIO DE BALEROS",
+                "CAMBIO DE FILTRO DE SECADOR",
+                "REVISION SEMESTRAL DE CLIMA",
+                "CAMBIO FILTROS DE TRANSMISION",
+                "NIVEL ACEITE DE TRANSMISION",
+                "FILTRO DE GAS DE ALTA PRESION",
+                "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
+                "FILTRO DE GAS BAJA PRESION ZONA MOTOR"
+            ],
+            "M3": [
+                "CAMBIO DE ACEITE DE MOTOR",
+                "CAMBIO DE FILTRO DE ACEITE MOTOR",
+                "CAMBIO DE FILTRO DE AIRE",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+                "ENGRASADO PUERTAS SERVICIO TRASERAS",
+                "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN",
+                "ENGRASADO PERNO DE DIRECCION",
+                "ENGRASADO DE TERMINALES DE DIRECCION",
+                "ENGRASADO DE MATRACAS",
+                "REVISION DE BALATAS",
+                "CAMBIO DE BALATAS DELANTERAS",
+                "CAMBIO DE BALATAS TRASERAS",
+                "REVISION NIVEL ACEITE DIFERENCIAL",
+                "CAMBIO DE ACEITE DIFERENCIAL",
+                "APRIETE DE TERMINALES"
+            ],
+            "M4": [
+                "CAMBIO DE ACEITE DE MOTOR",
+                "CAMBIO DE FILTRO DE ACEITE MOTOR",
+                "CAMBIO DE FILTRO DE AIRE",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+                "ENGRASADO PUERTAS SERVICIO TRASERAS",
+                "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN",
+                "ENGRASADO PERNO DE DIRECCION",
+                "ENGRASADO DE TERMINALES DE DIRECCION",
+                "ENGRASADO DE MATRACAS",
+                "REVISION DE BALATAS",
+                "%DEGRADO DE ANTICONGELANTE",
+                "NIVEL DE ANTICONGELANTE",
+                "CAMBIO DE ANTICONGELANTE"
+            ],
+            "M5": [
+                "CAMBIO DE ACEITE DE MOTOR",
+                "CAMBIO DE FILTRO DE ACEITE MOTOR",
+                "CAMBIO DE FILTRO DE AIRE",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+                "ENGRASADO PUERTAS SERVICIO TRASERAS",
+                "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN",
+                "ENGRASADO PERNO DE DIRECCION",
+                "ENGRASADO DE TERMINALES DE DIRECCION",
+                "ENGRASADO DE MATRACAS",
+                "REVISION DE BALATAS",
+                "CAMBIO DE BALATAS DELANTERAS",
+                "CAMBIO DE BALATAS TRASERAS",
+                "REVISION DE BALEROS",
+                "CAMBIO DE BALEROS",
+                "CAMBIO FILTROS DE TRANSMISION",
+                "NIVEL ACEITE DE TRANSMISION",
+                "CAMBIO ACEITE TRANSMISION",
+                "CAMBIO DE SECADOR COMPLETO",
+                "REVISION SEMESTRAL DE CLIMA",
+                "REVISION DE SISTEMA ELECTRICO",
+                "CAMBIO DE CABLES Y BUJIAS"
+            ],
+            "M6": [
+                "CAMBIO DE ACEITE DE MOTOR",
+                "CAMBIO DE FILTRO DE ACEITE MOTOR",
+                "CAMBIO DE FILTRO DE AIRE",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+                "ENGRASADO PUERTAS SERVICIO TRASERAS",
+                "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN",
+                "ENGRASADO PERNO DE DIRECCION",
+                "ENGRASADO DE TERMINALES DE DIRECCION",
+                "ENGRASADO DE MATRACAS",
+                "REVISION DE BALATAS",
+                "REVISION DE BALEROS",
+                "CAMBIO DE BALEROS",
+                "CAMBIO DE FILTRO DE SECADOR",
+                "REVISION SEMESTRAL DE CLIMA",
+                "CAMBIO FILTROS DE TRANSMISION",
+                "NIVEL ACEITE DE TRANSMISION",
+                "FILTRO DE GAS DE ALTA PRESION",
+                "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
+                "FILTRO DE GAS BAJA PRESION ZONA MOTOR",
+                "CAMBIO DE FILTRO HIDRAULICO"
+            ]
+        };
+
+        // Función para aplicar las palomitas automáticas
+        function aplicarPaquete() {
+            const paqueteSeleccionado = document.getElementById('selectPaqueteM').value;
+            
+            // 1. Limpiar todas las casillas primero
+            listaServicios.forEach((_, index) => {
+                document.getElementById(`chk_${index}`).checked = false;
+            });
+
+            // 2. Si se seleccionó un paquete válido, palomear los servicios correspondientes
+            if (paqueteSeleccionado && configuracionPaquetes[paqueteSeleccionado]) {
+                const serviciosDelPaquete = configuracionPaquetes[paqueteSeleccionado];
+                
+                listaServicios.forEach((servicio, index) => {
+                    if (serviciosDelPaquete.includes(servicio)) {
+                        document.getElementById(`chk_${index}`).checked = true;
+                    }
+                });
+            }
+        }
+
+        // Modificamos la función de limpiar para que también limpie el selector de M's
+        function limpiarFormularioCompleto() {
+            document.getElementById('serviceForm').reset();
+            document.getElementById('selectPaqueteM').value = ""; // Regresar selector a Manual
+            restaurarFecha();
+        }
+
+        // Inicialización
+        document.addEventListener("DOMContentLoaded", () => {
+            restaurarFecha();
+            cargarCheckboxes();
+            cargarTablaHistorial();
+        });
+
+        function restaurarFecha() {
+            const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10);
+            document.getElementById('inputFecha').value = localISOTime;
+        }
+
+        function cargarCheckboxes() {
+            const containerUI = document.getElementById('checkbox-container');
+            listaServicios.forEach((servicio, index) => {
+                const div = document.createElement('div');
+                div.className = "flex items-start gap-2 hover:bg-blue-50 p-1 rounded transition-colors";
+                div.innerHTML = `
+                    <input type="checkbox" id="chk_${index}" value="${index}" class="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
+                    <label for="chk_${index}" class="text-sm text-gray-700 cursor-pointer select-none leading-tight">${servicio}</label>
+                `;
+                containerUI.appendChild(div);
+            });
+            
+            // Agregar un listener a los checkboxes para cambiar el selector a "Manual" si el usuario mueve algo a mano
+            setTimeout(() => {
+                const checkboxes = document.querySelectorAll('#checkbox-container input[type="checkbox"]');
+                checkboxes.forEach(chk => {
+                    chk.addEventListener('change', () => {
+                        document.getElementById('selectPaqueteM').value = "";
+                    });
+                });
+            }, 100);
+        }
+
+        // --- NAVEGACIÓN ENTRE PESTAÑAS ---
+        function cambiarPestana(pestana) {
+            const vNuevo = document.getElementById('vista-nuevo');
+            const vHistorial = document.getElementById('vista-historial');
+            const btnNuevo = document.getElementById('tab-btn-nuevo');
+            const btnHistorial = document.getElementById('tab-btn-historial');
+
+            if(pestana === 'nuevo') {
+                vNuevo.classList.remove('hidden');
+                vHistorial.classList.add('hidden');
+                btnNuevo.classList.add('border-b-2', 'border-blue-600', 'text-blue-700');
+                btnNuevo.classList.remove('text-slate-500');
+                btnHistorial.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700');
+                btnHistorial.classList.add('text-slate-500');
+            } else {
+                vNuevo.classList.add('hidden');
+                vHistorial.classList.remove('hidden');
+                btnHistorial.classList.add('border-b-2', 'border-blue-600', 'text-blue-700');
+                btnHistorial.classList.remove('text-slate-500');
+                btnNuevo.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700');
+                btnNuevo.classList.add('text-slate-500');
+                cargarTablaHistorial(); // Refrescar tabla al abrir
+            }
+        }
+
+        // --- GENERACIÓN Y GUARDADO ---
+        function generarHoja(e) {
+            e.preventDefault();
+
+            const economico = document.getElementById('inputEco').value.toUpperCase();
+            const base = document.getElementById('inputBase').value.toUpperCase();
+            const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
+            
+            // Obtener el nombre del grupo seleccionado
+            const selectElement = document.getElementById('selectPaqueteM');
+            let grupoSeleccionado = selectElement.options[selectElement.selectedIndex].text;
+            if (grupoSeleccionado === "- Seleccionar (Manual) -" || document.getElementById('selectPaqueteM').value === "") {
+                grupoSeleccionado = "Personalizado";
+            }
+            
+            // Obtener y formatear fecha desde el input
+            const fechaInput = document.getElementById('inputFecha').value;
+            let fechaString = "";
+            if (fechaInput) {
+                const [year, month, day] = fechaInput.split('-');
+                fechaString = `${day}/${month}/${year}`;
+            }
+            
+            document.getElementById('print-eco').innerText = economico;
+            document.getElementById('print-base').innerText = base;
+            document.getElementById('print-fecha').innerText = fechaString;
+
+            const tbodyPrint = document.getElementById('print-table-body');
+            tbodyPrint.innerHTML = ''; 
+
+            let serviciosMarcados = []; // Para el historial
+
+            listaServicios.forEach((servicio, index) => {
+                const isChecked = document.getElementById(`chk_${index}`).checked;
+                const palomitaVerde = `<svg style="width: 14px; height: 14px; color: #15803d; margin: 0 auto; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>`;
+                const marca = isChecked ? palomitaVerde : ''; 
+                const persona = isChecked ? mecanico : '';
+                
+                if(isChecked) serviciosMarcados.push(servicio);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="col-desc">${servicio}</td>
+                    <td class="col-actividades" style="padding: 0;">${marca}</td>
+                    <td class="col-sino"></td>
+                    <td class="col-persona" style="font-size: 8px; text-align: center; vertical-align: middle; font-weight: bold;">${persona}</td>
+                `;
+                tbodyPrint.appendChild(tr);
+            });
+
+            // Guardar en el almacenamiento del navegador
+            if(serviciosMarcados.length > 0) {
+                guardarEnHistorial({ 
+                    fecha: fechaString, 
+                    economico: economico, 
+                    base: base, 
+                    mecanico: mecanico, 
+                    servicios: serviciosMarcados, 
+                    grupo: grupoSeleccionado,
+                    timestamp: new Date().getTime() 
+                });
+            }
+
+            // Mostrar vista de impresión
+            document.getElementById('ui-container').style.display = 'none';
+            document.getElementById('print-container').style.display = 'block';
+            window.scrollTo(0, 0); 
+        }
+
+        function volverUI() {
+            document.getElementById('ui-container').style.display = 'block';
+            document.getElementById('print-container').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        // --- FUNCIONES DEL HISTORIAL ---
+        function guardarEnHistorial(registro) {
+            let historial = JSON.parse(localStorage.getItem('historial_goldendragon')) || [];
+            // Agregar al inicio del arreglo
+            historial.unshift(registro);
+            localStorage.setItem('historial_goldendragon', JSON.stringify(historial));
+        }
+
+        function cargarTablaHistorial() {
+            let historial = JSON.parse(localStorage.getItem('historial_goldendragon')) || [];
+            const tbody = document.getElementById('tabla-historial-body');
+            const msgVacio = document.getElementById('mensaje-vacio');
+            tbody.innerHTML = '';
+
+            if(historial.length === 0) {
+                msgVacio.classList.remove('hidden');
+                return;
+            } else {
+                msgVacio.classList.add('hidden');
+            }
+
+            historial.forEach((reg, i) => {
+                // Obtener hora si existe el timestamp
+                let horaStr = "N/A";
+                if(reg.timestamp) {
+                    const dateObj = new Date(reg.timestamp);
+                    horaStr = dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+                
+                const grupoTexto = reg.grupo || "Personalizado";
+
+                // Generar lista de servicios en HTML
+                let listaHTML = `<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">`;
+                reg.servicios.forEach(s => {
+                    listaHTML += `<li class="truncate" title="${s}">${s}</li>`;
+                });
+                listaHTML += `</ul>`;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors fila-historial";
+                tr.innerHTML = `
+                    <td class="px-4 py-4 whitespace-nowrap align-top">
+                        <div class="text-slate-700">${reg.fecha}</div>
+                        <div class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1" title="Hora de registro">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            ${horaStr}
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 font-bold text-slate-900 align-top">${reg.economico}</td>
+                    <td class="px-4 py-4 text-slate-700 align-top">
+                        <span class="block">${reg.base}</span>
+                        <span class="block text-xs text-slate-500 mt-1"><i class="font-semibold">Mec:</i> ${reg.mecanico || 'N/A'}</span>
+                    </td>
+                    <td class="px-4 py-4 align-top">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded border border-indigo-200">${grupoTexto}</span>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">${reg.servicios.length} marcados</span>
+                        </div>
+                        ${listaHTML}
+                    </td>
+                    <td class="px-4 py-4 text-right align-top">
+                        <button onclick="borrarRegistro(${i})" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors">Borrar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function borrarRegistro(index) {
+            if(confirm("¿Estás seguro de borrar este registro del historial?")) {
+                let historial = JSON.parse(localStorage.getItem('historial_goldendragon')) || [];
+                historial.splice(index, 1);
+                localStorage.setItem('historial_goldendragon', JSON.stringify(historial));
+                cargarTablaHistorial();
+            }
+        }
+
+        // --- DESCARGAR EXCEL ---
+        function descargarExcel() {
+            let historial = JSON.parse(localStorage.getItem('historial_goldendragon')) || [];
+            if(historial.length === 0) {
+                alert("No hay registros en el historial para descargar.");
+                return;
+            }
+
+            // Formato UTF-8 (BOM) para que Excel lea los acentos y comas correctamente
+            let csvContent = '\uFEFF'; 
+            csvContent += "FECHA,ECONOMICO,BASE,MECANICO,GRUPO,CANTIDAD DE MANTENIMIENTOS,MANTENIMIENTOS SELECCIONADOS\n";
+
+            historial.forEach(reg => {
+                // Limpiar posibles comillas para que no rompa el CSV
+                let eco = reg.economico.replace(/"/g, '""');
+                let bas = reg.base.replace(/"/g, '""');
+                let mec = (reg.mecanico || '').replace(/"/g, '""');
+                let grp = (reg.grupo || 'Personalizado').replace(/"/g, '""');
+                let det = reg.servicios.join(" / ").replace(/"/g, '""');
+                
+                csvContent += `"${reg.fecha}","${eco}","${bas}","${mec}","${grp}","${reg.servicios.length}","${det}"\n`;
+            });
+
+            // Crear el archivo y forzar descarga
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Historial_Servicios_e_go.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // --- BUSCADOR DEL HISTORIAL ---
+        function filtrarHistorial() {
+            const input = document.getElementById("buscadorHistorial");
+            const filter = input.value.toUpperCase();
+            const tbody = document.getElementById("tabla-historial-body");
+            const tr = tbody.getElementsByTagName("tr");
+
+            for (let i = 0; i < tr.length; i++) {
+                // Buscar en la columna del Económico (índice 1 de la tabla)
+                let tdEco = tr[i].getElementsByTagName("td")[1]; 
+                if (tdEco) {
+                    let txtValue = tdEco.textContent || tdEco.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+    </script>
+</body>
+</html>
