@@ -297,14 +297,13 @@
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Izq'"></div>
             </div>
 
-            <div class="fr-obs-box">
-                <div class="fr-obs-title">OBSERVACIONES.</div>
-                <div class="fr-obs-line"></div>
-                <div class="fr-obs-line"></div>
-                <div class="fr-obs-line"></div>
-                <div class="fr-obs-line"></div>
-                <div class="fr-obs-line"></div>
-            </div>
+          <div class="fr-obs-box">
+                                <div class="fr-obs-title">OBSERVACIONES.</div>
+                                ${datos.obsEsteticas && datos.obsEsteticas.trim() !== '' ? 
+                                `<div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">${datos.obsEsteticas.toUpperCase()}</div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>` 
+                                : 
+                                `<div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>`}
+                            </div>
 
             <div class="fr-firmas">
                 <div class="fr-firma-box">
@@ -358,6 +357,7 @@
         let modoSoloLectura = false; 
 
         window.urlFotoFrontal = ""; window.urlFotoTrasera = ""; window.urlFotoDerecha = ""; window.urlFotoIzquierda = "";
+        window.obsEsteticas = params.get('obsest') || "";
 
         const listaServicios = [
             "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
@@ -869,7 +869,11 @@
             document.getElementById('fr-fecha-ingreso').innerText = fechaString;
             
             // LA FECHA DE SALIDA NO SE TOCA (NO HAY ID)
-
+// Inyectar observaciones estéticas
+            const cajaObs = document.getElementById('fr-caja-obs-recepcion');
+            if(cajaObs && window.obsEsteticas && window.obsEsteticas.trim() !== '') {
+                cajaObs.innerHTML = `<div class="fr-obs-title">OBSERVACIONES.</div><div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">${window.obsEsteticas.toUpperCase()}</div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>`;
+            }
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
             if(window.urlFotoDerecha) document.getElementById('img-right').src = window.urlFotoDerecha;
@@ -878,7 +882,7 @@
             if(serviciosMarcados.length > 0 || valorGrupo === "Correctivo") {
                 guardarEnFirebase({ 
                     fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
-                    mecanico: mecanico, comentarios: textoComentarios, servicios: serviciosMarcados, grupo: grupoSeleccionado,
+                   mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
                     fotos: { frontal: window.urlFotoFrontal, trasera: window.urlFotoTrasera, derecha: window.urlFotoDerecha, izquierda: window.urlFotoIzquierda }
                 });
             }
