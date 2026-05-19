@@ -438,6 +438,9 @@
             }
         });
 
+        // ============================================================================
+        // LECTURA DESDE FIREBASE (MODO SOLO LECTURA DESDE EXCEL)
+        // ============================================================================
         async function cargarHojaDesdeFirebase(idServicio) {
             try {
                 document.getElementById('ui-container').style.display = 'none';
@@ -811,6 +814,7 @@
                 fechaString = `${day}/${month}/${year}`;
             }
             
+            // Llenar Formato 1: Servicio
             document.getElementById('print-eco').innerText = economico;
             document.getElementById('print-base').innerText = base;
             document.getElementById('print-km').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
@@ -876,12 +880,14 @@
                 tbodyPrint.appendChild(tr);
             });
 
+            // Llenar Formato 2: Recepción
             document.getElementById('fr-eco').innerText = economico;
             document.getElementById('fr-base').innerText = base;
             document.getElementById('fr-km').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
             
             document.getElementById('fr-fecha-ingreso').innerText = fechaString;
-            // CORRECCIÓN: La fecha de salida se queda vacía en vivo
+            
+            // CORRECCIÓN FINAL: Borramos la fecha para que se rellene a pluma en la hoja de salida
             document.getElementById('fr-fecha-salida').innerText = "";
 
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
