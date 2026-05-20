@@ -97,20 +97,20 @@
                         <div><label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label><input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase"></div>
                     </div>
 
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-4 border-b pb-2 gap-4">
-                        <h3 class="text-lg font-bold text-slate-800">Seleccionar Servicios a Realizar</h3>
-                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                            <div class="flex items-center gap-2 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200 shadow-sm w-full sm:w-72">
+                    <div class="mb-6 border-b border-slate-200 pb-4">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3">Seleccionar Servicios a Realizar</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                            <div class="flex items-center gap-2 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200 shadow-sm w-full">
                                 <label for="inputComentarios" class="text-sm font-bold text-amber-900">Comentarios:</label>
                                 <input type="text" id="inputComentarios" class="w-full bg-transparent border-b border-amber-300 focus:border-amber-600 outline-none text-sm text-slate-800 uppercase" placeholder="Escribe aquí...">
                             </div>
-                            <div class="flex items-center gap-2 bg-teal-50 px-3 py-2 rounded-lg border border-teal-200 shadow-sm w-full sm:w-72">
+                            <div class="flex items-center gap-2 bg-teal-50 px-3 py-2 rounded-lg border border-teal-200 shadow-sm w-full">
                                 <label for="inputObsEsteticas" class="text-sm font-bold text-teal-900 whitespace-nowrap">Obs. Estéticas:</label>
                                 <input type="text" id="inputObsEsteticas" class="w-full bg-transparent border-b border-teal-300 focus:border-teal-600 outline-none text-sm text-slate-800 uppercase" placeholder="Golpes, rayones...">
                             </div>
-                            <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm w-full sm:w-auto">
+                            <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm w-full">
                                 <label for="selectPaqueteM" class="text-sm font-bold text-blue-900 whitespace-nowrap">Grupo de Mtto:</label>
-                                <select id="selectPaqueteM" onchange="aplicarPaquete()" class="w-full sm:w-auto px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
+                                <select id="selectPaqueteM" onchange="aplicarPaquete()" class="w-full px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
                                     <option value="">- Seleccionar (Manual) -</option>
                                     <option value="Correctivo">Correctivo</option>
                                     <option value="M1">Grupo M1</option>
@@ -123,7 +123,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container"></div>
 
                     <div class="flex justify-end gap-4 border-t pt-6">
@@ -635,7 +634,7 @@
                 reg.id = documento.id; historialGlobal.push(reg);
                 let horaStr = reg.timestamp ? new Date(reg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
                 let listaHTML = `<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">`;
-                (reg.servicios || []).forEach(s => { listaHTML += `<ul class="truncate" title="${s}">${s}</ul>`; });
+                (reg.servicios || []).forEach(s => { listaHTML += `<li class="truncate" title="${s}">${s}</li>`; });
                 listaHTML += `</ul>`;
                 let notaComentarios = (reg.comentarios && reg.comentarios.trim() !== '') ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
 
@@ -647,7 +646,7 @@
                     <td class="px-4 py-4 text-slate-700 align-top"><span class="block">${reg.base || '-'}</span><span class="block text-xs text-slate-500 mt-1"><i class="font-semibold">Km:</i> ${reg.kilometraje ? new Intl.NumberFormat('es-MX').format(reg.kilometraje) : 'N/A'}</span><span class="block text-xs text-slate-500"><i class="font-semibold">Mec:</i> ${reg.mecanico || 'N/A'}</span></td>
                     <td class="px-4 py-4 align-top"><div class="flex items-center gap-2 mb-2"><span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded border border-indigo-200">${reg.grupo || "Personalizado"}</span><span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">${(reg.servicios || []).length} marcados</span></div>${listaHTML}${notaComentarios}</td>
                     <td class="px-4 py-4 text-right align-top">
-                        <button onclick="window.open('?ver=${reg.id}', '_blank')", class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors mb-2 block w-full text-center">Ver Hoja</button>
+                        <button onclick="window.open('?ver=${reg.id}', '_blank')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors mb-2 block w-full text-center">Ver Hoja</button>
                         <button onclick="borrarRegistro('${reg.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors block w-full text-center">Borrar</button>
                     </td>
                 `;
