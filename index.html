@@ -19,7 +19,7 @@
 
         /* Contenedor principal de impresión */
         #print-container { display: none; width: 100%; max-width: 720px; margin: 0 auto; color: black; background-color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        
+
         /* FORMATO 1: DESCRIPCIÓN DE SERVICIO */
         .formato-servicio { font-family: Arial, sans-serif; padding: 10px 30px; background: white; }
         .hoja-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
@@ -71,12 +71,12 @@
                     <path d="M 500,70 C 700,10 850,110 1050,40" fill="none" stroke="#ff6d01" stroke-width="32" stroke-linecap="round" />
                     <path d="M 530,90 C 720,30 870,130 1050,60" fill="none" stroke="#ff6d01" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
                 </svg>
-                
+
                 <div class="relative z-10">
                     <h1 class="text-2xl font-black drop-shadow-sm text-slate-900 uppercase">GESTIÓN DE SERVICIOS</h1>
                     <p class="text-slate-800 text-sm mt-1 font-bold drop-shadow-sm">Generador y registro de órdenes.</p>
                 </div>
-                
+
                 <div class="relative z-10 bg-white w-32 h-32 rounded-xl shadow-lg border border-green-200 flex flex-col items-center justify-center text-center p-2 shrink-0">
                     <img src="logo_ego.png" alt="Logo e.go" class="w-full h-full object-contain" onerror="this.src='https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg'">
                 </div>
@@ -118,7 +118,7 @@
 
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 border-b pb-2 gap-4">
                         <h3 class="text-lg font-bold text-slate-800">Seleccionar Servicios a Realizar</h3>
-                        
+
                         <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
                             <div class="flex items-center gap-2 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200 shadow-sm w-full sm:w-80">
                                 <label for="inputComentarios" class="text-sm font-bold text-amber-900">Comentarios:</label>
@@ -170,7 +170,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="overflow-x-auto rounded-lg border border-slate-200">
                     <table class="min-w-full divide-y divide-slate-200 text-sm">
                         <thead class="bg-slate-50">
@@ -192,7 +192,7 @@
     </div>
 
     <div id="print-container">
-        
+
         <div id="botones-impresion" class="no-print bg-slate-800 p-4 flex flex-col md:flex-row justify-between items-center shadow-md mb-4 sticky top-0 z-50">
             <button id="btn-volver-ui" onclick="volverUI()" class="px-4 py-2 bg-slate-600 text-white rounded font-bold hover:bg-slate-500 transition-colors text-sm mb-2 md:mb-0">⬅️ Volver al Inicio</button>
             <div class="flex gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700">
@@ -276,260 +276,39 @@
 
             <div class="fr-title">FORMATO ENTREGA / RECEPCIÓN.</div>
 
+            <div class="fr-row">
     <div class="fr-row">
                 <span class="fr-label">NUM. ECONÓMICO:</span> 
                 <span class="fr-line-fixed" style="width: 100px;" id="fr-eco"></span>
-                <span class="fr-label" style="margin-left: 20px;">RUTA / BASE:</span> 
-                <span class="fr-line-fixed" style="width: 150px;" id="fr-base"></span>
+                <span class="fr-label" style="margin-left: 20px;">NIVEL DE GAS:</span> 
+                <span class="fr-line-fixed" style="width: 80px;"></span>
+                <span class="fr-label" style="margin-left: 20px;">PSI NÚMERO VIN:</span> 
+                <span class="fr-line"></span>
             </div>
 
             <div class="fr-row">
-                <span class="fr-label">KILOMETROS ENTRADA.</span> 
-                <span class="fr-line-fixed" style="width: 150px;" id="fr-km"></span>
+                <span class="fr-label">NOMBRE OPERADOR:</span> 
+                <span class="fr-line"></span>
+                <span class="fr-label" style="margin-left: 20px;">RUTA / BASE:</span> 
+                <span class="fr-line-fixed" style="width: 150px;" id="fr-base"></span>
             </div>
-
-            <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
-            
-            <div class="grid-fotos-reales" style="margin-bottom: 15px;">
-                <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Frontal'"></div>
-                <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Trasera'"></div>
-                <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Der'"></div>
-                <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Izq'"></div>
-            </div>
-
-          <div class="fr-obs-box">
-                                <div class="fr-obs-title">OBSERVACIONES.</div>
-                                ${datos.obsEsteticas && datos.obsEsteticas.trim() !== '' ? 
-                                `<div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">${datos.obsEsteticas.toUpperCase()}</div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>` 
-                                : 
-                                `<div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>`}
-                            </div>
-
-            <div class="fr-firmas">
-                <div class="fr-firma-box">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                    <div>FIRMA DE INGRESO DE UNIDAD A GD</div>
-                    <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                        <span style="margin-right: 5px;">FECHA.</span>
-                        <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;" id="fr-fecha-ingreso"></span>
-                    </div>
-                </div>
-                <div class="fr-firma-box">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                    <div>FIRMA DE SALIDA DE GD</div>
-                    <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                        <span style="margin-right: 5px;">FECHA.</span>
-                        <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-info"> 
-                <strong>PRIV. SIN NOMBRE #101</strong><br>
-                COL. TORRES DE SANTO DOMINGO<br>
-                SAN NICOLAS DE LOS GARZA, N.L.<br>
-                C.P. 66440
-            </div>
-        </div>
-
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDLywqH8iBbnlSwwRFhWVbZ4mjEkz6Xs_8",
-            authDomain: "gestion-servicios-ego.firebaseapp.com",
-            projectId: "gestion-servicios-ego",
-            storageBucket: "gestion-servicios-ego.firebasestorage.app",
-            messagingSenderId: "378018276879",
-            appId: "1:378018276879:web:310b4d30b0d3d4e8c6257a"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const serviciosRef = collection(db, "servicios");
-
-        const URL_WEBAPP = "https://script.google.com/macros/s/AKfycbzSYGJNO-VSxYa8v0EGYYJVsJy5RPw1rkurLX-jDcFux4WTNBr6JHanINJbSeHkeAlRMw/exec";
-
-        let historialGlobal = [];
-        let modoSoloLectura = false; 
-
-        window.urlFotoFrontal = ""; window.urlFotoTrasera = ""; window.urlFotoDerecha = ""; window.urlFotoIzquierda = "";
-        window.obsEsteticas = params.get('obsest') || "";
-
-        const listaServicios = [
-            "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
-            "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
-            "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "%DEGRADO DE ANTICONGELANTE", "NIVEL DE ANTICONGELANTE",
-            "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO FILTROS DE TRANSMISION",
-            "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
-            "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN",
-            "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS",
-            "CAMBIO DE ANTICONGELANTE", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "REVISION DE BALATAS",
-            "CAMBIO DE BALATAS TRASERAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE FILTRO HIDRAULICO",
-            "CAMBIO DE FILTRO DE SECADOR", "CAMBIO DE SECADOR COMPLETO", "APRIETE DE TERMINALES",
-            "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"
-        ];
-
-        document.addEventListener("DOMContentLoaded", async function() {
-            const params = new URLSearchParams(window.location.search);
-            
-            if (params.has('ver')) {
-                const idServicio = params.get('ver');
-                modoSoloLectura = true;
-                await cargarHojaDesdeFirebase(idServicio);
-                return; 
-            }
-            
-            restaurarFecha();
-            cargarCheckboxes();
-            
-            if (params.has('unidad') || params.has('ruta')) {
-                const unidad = params.get('unidad');
-                const ruta = params.get('ruta');
-                const km = params.get('km');
-                const comentarios = params.get('comentarios'); 
-                const manto = params.get('manto');             
-                
-                window.urlFotoFrontal = params.get('f_frontal') || "";
-                window.urlFotoTrasera = params.get('f_trasera') || "";
-                window.urlFotoDerecha = params.get('f_derecha') || "";
-                window.urlFotoIzquierda = params.get('f_izquierda') || "";
-
-                window.filaExcelOrigen = params.get('fila');
-                window.hojaExcelOrigen = params.get('hoja');
-
-                if(unidad && document.getElementById('inputEco')) document.getElementById('inputEco').value = unidad;
-                if(ruta && document.getElementById('inputBase')) document.getElementById('inputBase').value = ruta;
-                if(km && document.getElementById('inputKm')) document.getElementById('inputKm').value = km;
-                if(comentarios && document.getElementById('inputComentarios')) document.getElementById('inputComentarios').value = comentarios; 
-                
-                if(manto && document.getElementById('selectPaqueteM')) {
-                    let mantoValue = manto;
-                    if(manto === "CORRECTIVO") mantoValue = "Correctivo";
-                    
-                    if(mantoValue !== "N/A") {
-                        document.getElementById('selectPaqueteM').value = mantoValue;
-                        setTimeout(() => {
-                            if(typeof window.aplicarPaquete === "function") {
-                                window.aplicarPaquete();
-                            }
-                        }, 500);
-                    }
-                }
-                
-                setTimeout(() => {
-                    if(document.getElementById('inputEco')) document.getElementById('inputEco').classList.add('bg-blue-50');
-                    if(document.getElementById('inputBase')) document.getElementById('inputBase').classList.add('bg-blue-50');
-                    if(document.getElementById('inputKm')) document.getElementById('inputKm').classList.add('bg-blue-50');
-                    if(document.getElementById('inputComentarios')) document.getElementById('inputComentarios').classList.add('bg-amber-50');
-                }, 100);
-            }
-        });
-
-        // ============================================================================
-        // LECTURA DESDE FIREBASE (MODO SOLO LECTURA DESDE EXCEL)
-        // ============================================================================
-        async function cargarHojaDesdeFirebase(idServicio) {
-            try {
-                document.getElementById('ui-container').style.display = 'none';
-                document.getElementById('print-container').style.display = 'block';
-                document.getElementById('print-container').innerHTML = '<div class="text-center p-10 font-bold text-lg">Cargando hoja de servicio...</div>';
-                
-                const docSnap = await getDoc(doc(db, "servicios", idServicio));
-                
-                if (docSnap.exists()) {
-                    const datos = docSnap.data();
-                    
-                    document.getElementById('print-container').innerHTML = `
-                        <div id="botones-impresion" class="no-print bg-slate-800 p-4 flex flex-col md:flex-row justify-between items-center shadow-md mb-4 sticky top-0 z-50">
-                            <button id="btn-volver-ui" onclick="volverUI()" class="px-4 py-2 bg-slate-600 text-white rounded font-bold hover:bg-slate-500 transition-colors text-sm mb-2 md:mb-0">⬅️ Volver al Inicio</button>
-                            <div class="flex gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700">
-                                <button onclick="toggleHojas('servicio')" id="btn-tg-servicio" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">1. Ver Servicio</button>
-                                <button onclick="toggleHojas('recepcion')" id="btn-tg-recepcion" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">2. Ver Recepción</button>
-                                <button onclick="toggleHojas('ambas')" id="btn-tg-ambas" class="px-3 py-1.5 rounded text-sm font-bold bg-blue-600 text-white shadow">Ambas Hojas</button>
-                            </div>
-                            <button onclick="window.print()" class="px-6 py-2 bg-green-500 text-white rounded font-black hover:bg-green-600 shadow-md text-lg flex items-center gap-2 mt-2 md:mt-0">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                IMPRIMIR AHORA
-                            </button>
-                        </div>
-
-                        <div id="hoja-servicio-container" class="formato-servicio">
-                            <div class="hoja-header" style="justify-content: space-between;">
-                                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-start;">
-                                    <img src="logo_ego.png" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;" onerror="this.src='https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg'">
-                                </div>
-                                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-end;">
-                                    <img src="logo_goldendragon.png" alt="Logo Golden Dragon" style="max-width: 100%; max-height: 60px; object-fit: contain;" onerror="this.style.display='none'">
-                                </div>
-                            </div>
-
-                            <div class="title-section">
-                                <h1 style="font-weight: 900;">DESCRIPCIÓN DEL SERVICIO.</h1>
-                                <div id="print-notificacion-correctivo" class="notificacion-correctivo ${datos.grupo === 'Correctivo' ? '' : 'hidden'}">
-                                    SERVICIO CORRECTIVO
-                                </div>
-                            </div>
-
-                            <div class="info-row">
-                                <div class="info-field"><span>ECONOMICO.</span> <span class="info-line" style="width: 60px;">${datos.economico}</span></div>
-                                <div class="info-field"><span>BASE/RUTA.</span> <span class="info-line" style="width: 100px;">${datos.base}</span></div>
-                                <div class="info-field"><span>KILOMETRAJE.</span> <span class="info-line" style="width: 80px;">${datos.kilometraje ? new Intl.NumberFormat('es-MX').format(datos.kilometraje) : ''}</span></div>
-                                <div class="info-field"><span>FECHA.</span> <span class="info-line" style="width: 80px;">${datos.fecha}</span></div>
-                            </div>
-
-                            <table class="table-container">
-                                <thead>
-                                    <tr>
-                                        <th class="col-desc">DESCRIPCION DEL SERVICIO.</th>
-                                        <th class="col-actividades">ACTIVIDADES A<br>REALIZAR</th>
-                                        <th class="col-sino">ACTIVIDADES<br>REALIZADAS</th>
-                                        <th class="col-persona">PERSONA QUE REALIZO Y/O<br>REVISO</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="print-table-body">
-                                </tbody>
-                            </table>
-
-                            <div style="margin-top: 10px;">
-                                <div style="font-weight: bold; font-size: 10px; letter-spacing: 1px; padding-left: 2px;">COMENTARIOS.</div>
-                                <div id="print-comentarios-box" style="display: flex; flex-direction: column; font-size: 10px; min-height: 80px;">
-                                </div>
-                            </div>
-
-                            <div style="margin-top: 25px; display: flex; justify-content: center;">
-                                <div style="width: 250px; text-align: center;">
-                                    <div style="border-bottom: 1px solid black; margin-bottom: 4px;"></div>
-                                    <div style="font-weight: bold; font-size: 10px; letter-spacing: 1px;">NOMBRE Y FIRMA</div>
-                                </div>
-                            </div>
-
-                            <div class="footer-info"> 
-                                <strong>PRIV. SIN NOMBRE #101</strong><br>
-                                COL. TORRES DE SANTO DOMINGO<br>
-                                SAN NICOLAS DE LOS GARZA, N.L.<br>
-                                C.P. 66440
-                            </div>
-                        </div>
-
-                        <div id="hoja-recepcion-container" class="formato-recepcion salto-pagina hidden-hoja">
-                            <div class="hoja-header" style="justify-content: space-between;">
-                                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-start;">
-                                    <img src="logo_ego.png" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;" onerror="this.src='https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg'">
-                                </div>
-                                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-end;">
-                                    <img src="logo_goldendragon.png" alt="Logo Golden Dragon" style="max-width: 100%; max-height: 60px; object-fit: contain;" onerror="this.style.display='none'">
-                                </div>
-                            </div>
+@@ -536,472 +527,463 @@
 
                             <div class="fr-title">FORMATO ENTREGA / RECEPCIÓN.</div>
 
+                            <div class="fr-row">
                         <div class="fr-row">
                                 <span class="fr-label">NUM. ECONÓMICO:</span> 
                                 <span class="fr-line-fixed" style="width: 100px;">${datos.economico}</span>
+                                <span class="fr-label" style="margin-left: 20px;">NIVEL DE GAS:</span> 
+                                <span class="fr-line-fixed" style="width: 80px;"></span>
+                                <span class="fr-label" style="margin-left: 20px;">PSI NÚMERO VIN:</span> 
+                                <span class="fr-line"></span>
+                            </div>
+
+                            <div class="fr-row">
+                                <span class="fr-label">NOMBRE OPERADOR:</span> 
+                                <span class="fr-line"></span>
                                 <span class="fr-label" style="margin-left: 20px;">RUTA / BASE:</span> 
                                 <span class="fr-line-fixed" style="width: 150px;">${datos.base}</span>
                             </div>
@@ -635,7 +414,7 @@
                             <div style="border-bottom: 1px solid black; height: 16px;"></div>
                         `;
                     }
-                    
+
                     if(document.getElementById('btn-volver-ui')) document.getElementById('btn-volver-ui').style.display = 'none';
                     toggleHojas('ambas'); 
 
@@ -701,9 +480,9 @@
         function cargarCheckboxes() {
             const containerUI = document.getElementById('checkbox-container');
             if(!containerUI) return;
-            
+
             containerUI.innerHTML = ''; 
-            
+
             listaServicios.forEach((servicio, index) => {
                 const div = document.createElement('div');
                 div.className = "flex items-start gap-2 hover:bg-blue-50 p-1 rounded transition-colors";
@@ -713,7 +492,7 @@
                 `;
                 containerUI.appendChild(div);
             });
-            
+
             setTimeout(() => {
                 const checkboxes = document.querySelectorAll('#checkbox-container input[type="checkbox"]');
                 checkboxes.forEach(chk => {
@@ -780,22 +559,22 @@
             const kilometraje = document.getElementById('inputKm').value;
             const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
             const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
-            
+
             const selectElement = document.getElementById('selectPaqueteM');
             const valorGrupo = selectElement.value; 
             let grupoSeleccionado = selectElement.options[selectElement.selectedIndex].text; 
-            
+
             if (grupoSeleccionado === "- Seleccionar (Manual) -" || document.getElementById('selectPaqueteM').value === "") {
                 grupoSeleccionado = "Personalizado";
             }
-            
+
             const fechaInput = document.getElementById('inputFecha').value;
             let fechaString = "";
             if (fechaInput) {
                 const [year, month, day] = fechaInput.split('-');
                 fechaString = `${day}/${month}/${year}`;
             }
-            
+
             // Llenar Formato 1: Servicio
             document.getElementById('print-eco').innerText = economico;
             document.getElementById('print-base').innerText = base;
@@ -847,7 +626,7 @@
             listaServicios.forEach((servicio, index) => {
                 const chk = document.getElementById(`chk_${index}`);
                 const isChecked = chk ? chk.checked : false; 
-                
+
                 const marca = isChecked ? palomitaVerde : ''; 
                 const persona = isChecked ? mecanico : '';
                 if(isChecked) serviciosMarcados.push(servicio);
@@ -865,15 +644,11 @@
             document.getElementById('fr-eco').innerText = economico;
             document.getElementById('fr-base').innerText = base;
             document.getElementById('fr-km').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
-            
+
             document.getElementById('fr-fecha-ingreso').innerText = fechaString;
-            
+
             // LA FECHA DE SALIDA NO SE TOCA (NO HAY ID)
-// Inyectar observaciones estéticas
-            const cajaObs = document.getElementById('fr-caja-obs-recepcion');
-            if(cajaObs && window.obsEsteticas && window.obsEsteticas.trim() !== '') {
-                cajaObs.innerHTML = `<div class="fr-obs-title">OBSERVACIONES.</div><div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">${window.obsEsteticas.toUpperCase()}</div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>`;
-            }
+
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
             if(window.urlFotoDerecha) document.getElementById('img-right').src = window.urlFotoDerecha;
@@ -882,7 +657,7 @@
             if(serviciosMarcados.length > 0 || valorGrupo === "Correctivo") {
                 guardarEnFirebase({ 
                     fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
-                   mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
+                    mecanico: mecanico, comentarios: textoComentarios, servicios: serviciosMarcados, grupo: grupoSeleccionado,
                     fotos: { frontal: window.urlFotoFrontal, trasera: window.urlFotoTrasera, derecha: window.urlFotoDerecha, izquierda: window.urlFotoIzquierda }
                 });
             }
@@ -890,7 +665,7 @@
             document.getElementById('ui-container').style.display = 'none';
             document.getElementById('print-container').style.display = 'block';
             toggleHojas('ambas'); 
-            
+
             if(document.getElementById('btn-volver-ui')) {
                 document.getElementById('btn-volver-ui').style.display = 'inline-block';
             }
@@ -907,7 +682,7 @@
 
                 if (window.filaExcelOrigen && window.hojaExcelOrigen) {
                     const linkUnico = "https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?ver=" + docRef.id;
-                    
+
                     fetch(URL_WEBAPP, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -934,7 +709,7 @@
             const tbody = document.getElementById('tabla-historial-body');
             const msgVacio = document.getElementById('mensaje-vacio');
             if(!tbody) return; 
-            
+
             tbody.innerHTML = ''; historialGlobal = []; 
 
             if (snaps.empty) { msgVacio.classList.remove('hidden'); return; }
@@ -944,11 +719,11 @@
                 const reg = documento.data();
                 reg.id = documento.id; historialGlobal.push(reg);
                 let horaStr = reg.timestamp ? new Date(reg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
-                
+
                 let listaHTML = `<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">`;
                 (reg.servicios || []).forEach(s => { listaHTML += `<li class="truncate" title="${s}">${s}</li>`; });
                 listaHTML += `</ul>`;
-                
+
                 let notaComentarios = (reg.comentarios && reg.comentarios.trim() !== '') ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
 
                 const tr = document.createElement('tr');
