@@ -56,7 +56,6 @@
         /* ESTILOS NUEVOS PARA LA CUADRÍCULA DE FOTOS */
         .grid-fotos-reales { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin: 0 auto; }
         .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; }
-        .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; }
         .foto-header-title { font-size: 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 4px; padding-bottom: 1px; background-color: #f3f4f6; }
         .foto-img-element { height: 135px; width: 100%; object-fit: contain; margin: 0 auto; display: block; }
 
@@ -534,7 +533,7 @@
             if(!modoSoloLectura && (serviciosMarcados.length > 0 || valorGrupo === "Correctivo")) {
                 guardarEnFirebase({ 
                     fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
-                    mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: groupSeleccionado || grupoSeleccionado,
+                    mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
                     fotos: { frontal: window.urlFotoFrontal, trasera: window.urlFotoTrasera, derecha: window.urlFotoDerecha, izquierda: window.urlFotoIzquierda }
                 });
             }
