@@ -19,7 +19,7 @@
 
         /* Contenedor principal de impresión */
         #print-container { display: none; width: 100%; max-width: 720px; margin: 0 auto; color: black; background-color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        
+
         /* FORMATO 1: DESCRIPCIÓN DE SERVICIO */
         .formato-servicio { font-family: Arial, sans-serif; padding: 10px 30px; background: white; }
         .hoja-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
@@ -47,14 +47,13 @@
         .fr-label { font-weight: bold; margin-right: 5px; white-space: nowrap; }
         .fr-line { border-bottom: 1px solid black; flex-grow: 1; min-height: 14px; text-align: center; font-weight: bold; }
         .fr-line-fixed { border-bottom: 1px solid black; display: inline-block; text-align: center; font-weight: bold; }
-        .fr-manto-label { font-weight: bold; font-size: 11px; color: #b91c1c; text-transform: uppercase; border: 1px dashed #b91c1c; padding: 1px 4px; border-radius: 3px; }
         .fr-obs-box { margin-top: 15px; flex-grow: 1; }
         .fr-obs-title { font-size: 11px; font-weight: bold; margin-bottom: 8px; }
         .fr-obs-line { border-bottom: 1px solid black; height: 22px; width: 100%; }
         .fr-firmas { display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
         .fr-firma-box { width: 45%; }
 
-        /* ESTILOS DE LA CUADRÍCULA DE FOTOS */
+        /* ESTILOS NUEVOS PARA LA CUADRÍCULA DE FOTOS */
         .grid-fotos-reales { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin: 0 auto; }
         .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; }
         .foto-header-title { font-size: 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 4px; padding-bottom: 1px; background-color: #f3f4f6; }
@@ -310,7 +309,7 @@
         window.obsEsteticas = params.get('obsest') || "";
         window.filaExcelOrigen = params.get('fila');
         window.hojaExcelOrigen = params.get('hoja');
-        window.idDocFused = null;
+        window.idDocFused = null; // Guardará el ID del borrador a fusionar
 
         const listaServicios = [
             "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
@@ -527,7 +526,7 @@
                 }
             }
 
-            if(!modoSoloLectura) {
+            if(!modoSoloLectura && (serviciosMarcados.length > 0 || valorGrupo === "Correctivo")) {
                 guardarEnFirebase({ 
                     fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
                     mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
@@ -707,9 +706,11 @@
                 
                 let serviciosPreprogramados = [];
                 let grupoPreprogramado = "";
+                let comentariosPreprogramados = "";
                 window.idDocFused = null;
 
                 try {
+                    // Buscamos si existe un borrador PROGRAMADO en Firebase para esta unidad específica
                     const q = query(serviciosRef, where("economico", "==", uParam), where("estatus", "==", "PROGRAMADO"), orderBy("timestamp", "desc"), limit(1));
                     const querySnapshot = await getDocs(q);
                     
@@ -718,30 +719,36 @@
                         window.idDocFused = docProg.id;
                         serviciosPreprogramados = docProg.data().servicios || [];
                         grupoPreprogramado = docProg.data().grupo || "";
+                        comentariosPreprogramados = docProg.data().comentarios || "";
                     }
                 } catch(err) {
-                    console.error("Error al buscar hojas programadas: ", err);
+                    console.error("Error buscando pre-programacion: ", err);
                 }
 
-                // LLENADO FRESCO: Los datos del patio enviados por Luis tienen prioridad absoluta
+                // Inyectamos los datos en vivo reales capturados por Luis en el patio
                 document.getElementById('inputEco').value = uParam;
-                document.getElementById('inputBase').value = params.get('ruta');
-                document.getElementById('inputKm').value = params.get('km');
-                document.getElementById('inputComentarios').value = params.get('comentarios') || "";
+                document.getElementById('inputBase').value = params.get('ruta') || "";
+                document.getElementById('inputKm').value = params.get('km') || "";
                 document.getElementById('inputObsEsteticas').value = params.get('obsest') || "";
-                document.getElementById('inputMecanico').value = ""; // Queda en blanco para Luis
+                document.getElementById('inputMecanico').value = ""; // Obligatorio vaciarlo para captura de Luis
                 window.obsEsteticas = params.get('obsest') || "";
 
+                // Prioridad para comentarios: si tú ya escribiste algo en la oficina, dejamos el tuyo. Si no, lo que ponga Luis.
+                document.getElementById('inputComentarios').value = comentariosPreprogramados || params.get('comentarios') || "";
+
                 if(window.idDocFused) {
-                    if(grupoPreprogramado) document.getElementById('selectPaqueteM').value = grupoPreprogramado;
+                    // 🛡️ MODO ESCUDO ACTIVADO: Como hay pre-programación, ignoramos el select de Luis para no borrar tus palomitas
+                    if(grupoPreprogramado) {
+                        document.getElementById('selectPaqueteM').value = grupoPreprogramado;
+                    }
                     setTimeout(() => {
                         listaServicios.forEach((servicio, index) => {
                             const chk = document.getElementById(`chk_${index}`);
                             if(chk) chk.checked = serviciosPreprogramados.includes(servicio);
                         });
-                        // Nos quedamos en el panel UI para que digiten el nombre del Mecánico
                     }, 300);
                 } else {
+                    // Flujo normal sin pre-programación: aplicamos el paquete que mande Luis
                     if(params.get('manto')) {
                         document.getElementById('selectPaqueteM').value = params.get('manto');
                         setTimeout(() => aplicarPaquete(), 300);
