@@ -6,21 +6,16 @@
     <title>Generador de Servicios e.go</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Estilos generales de impresión */
         @media print {
             body { background-color: white; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             #ui-container { display: none !important; }
             #print-container { display: block !important; padding: 0 !important; box-shadow: none !important; background: transparent; }
             .no-print { display: none !important; }
             .salto-pagina { page-break-before: always; }
-            @media print { img { max-width: 100% !important; page-break-inside: avoid; } }
+            img { max-width: 100% !important; page-break-inside: avoid; }
             @page { size: letter portrait; margin: 0.4cm 1.5cm; } 
         }
-
-        /* Contenedor principal de impresión */
         #print-container { display: none; width: 100%; max-width: 720px; margin: 0 auto; color: black; background-color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-
-        /* FORMATO 1: DESCRIPCIÓN DE SERVICIO */
         .formato-servicio { font-family: Arial, sans-serif; padding: 10px 30px; background: white; }
         .hoja-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
         .title-section { text-align: center; margin-bottom: 4px; }
@@ -39,8 +34,6 @@
         .col-sino { width: 15%; text-align: center !important; font-weight: bold; }
         .col-persona { width: 30%; }
         .footer-info { margin-top: 10px; font-size: 9px; text-align: center; line-height: 1.2; }
-
-        /* FORMATO 2: RECEPCIÓN DE UNIDAD */
         .formato-recepcion { font-family: Arial, sans-serif; padding: 10px 30px; background: white; min-height: 25cm; display: flex; flex-direction: column; }
         .fr-title { font-size: 13px; font-weight: bold; margin-bottom: 15px; letter-spacing: 0.5px; }
         .fr-row { margin-bottom: 12px; font-size: 11px; display: flex; align-items: flex-end; width: 100%; }
@@ -52,609 +45,706 @@
         .fr-obs-line { border-bottom: 1px solid black; height: 22px; width: 100%; }
         .fr-firmas { display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
         .fr-firma-box { width: 45%; }
-
-        /* ESTILOS PARA LA CUADRÍCULA DE FOTOS */
         .grid-fotos-reales { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin: 0 auto; }
         .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; }
         .foto-header-title { font-size: 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 4px; padding-bottom: 1px; background-color: #f3f4f6; }
         .foto-img-element { height: 135px; width: 100%; object-fit: contain; margin: 0 auto; display: block; }
-
         .hidden-hoja { display: none !important; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
-    <div id="ui-container" class="max-w-5xl mx-auto p-6">
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="relative bg-[#10c86f] p-6 text-slate-900 flex justify-between items-center overflow-hidden">
-                <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-90" preserveAspectRatio="none" viewBox="0 0 1000 100">
-                    <path d="M 500,70 C 700,10 850,110 1050,40" fill="none" stroke="#ff6d01" stroke-width="32" stroke-linecap="round" />
-                    <path d="M 530,90 C 720,30 870,130 1050,60" fill="none" stroke="#ff6d01" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
-                </svg>
+<div id="ui-container" class="max-w-5xl mx-auto p-6">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="relative bg-[#10c86f] p-6 text-slate-900 flex justify-between items-center overflow-hidden">
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-90" preserveAspectRatio="none" viewBox="0 0 1000 100">
+                <path d="M 500,70 C 700,10 850,110 1050,40" fill="none" stroke="#ff6d01" stroke-width="32" stroke-linecap="round" />
+                <path d="M 530,90 C 720,30 870,130 1050,60" fill="none" stroke="#ff6d01" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
+            </svg>
+            <div class="relative z-10">
+                <h1 class="text-2xl font-black drop-shadow-sm text-slate-900 uppercase">GESTIÓN DE SERVICIOS</h1>
+                <p class="text-slate-800 text-sm mt-1 font-bold drop-shadow-sm">Generador y registro de órdenes.</p>
+            </div>
+            <div class="relative z-10 bg-white w-32 h-32 rounded-xl shadow-lg border border-green-200 flex flex-col items-center justify-center text-center p-2 shrink-0">
+                <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" class="w-full h-full object-contain">
+            </div>
+        </div>
 
-                <div class="relative z-10">
-                    <h1 class="text-2xl font-black drop-shadow-sm text-slate-900 uppercase">GESTIÓN DE SERVICIOS</h1>
-                    <p class="text-slate-800 text-sm mt-1 font-bold drop-shadow-sm">Generador y registro de órdenes.</p>
+        <div class="flex border-b border-slate-200 bg-slate-50 px-6">
+            <button onclick="cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">Nuevo Servicio</button>
+            <button onclick="cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors">Historial de Registros</button>
+        </div>
+
+        <div id="vista-nuevo">
+            <form id="serviceForm" class="p-6" onsubmit="window.generarHoja(event)">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label><input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. ECO-01"></div>
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label><input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. BASE NORTE"></div>
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">KILOMETRAJE</label><input type="number" id="inputKm" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500" placeholder="Ej. 120000"></div>
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">MECÁNICO</label><input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. LUIS"></div>
+                    <div><label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label><input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase"></div>
                 </div>
 
-                <div class="relative z-10 bg-white w-32 h-32 rounded-xl shadow-lg border border-green-200 flex flex-col items-center justify-center text-center p-2 shrink-0">
-                    <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" class="w-full h-full object-contain">
-                </div>
-            </div>
-
-            <div class="flex border-b border-slate-200 bg-slate-50 px-6">
-                <button onclick="cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">Nuevo Servicio</button>
-                <button onclick="cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors">Historial de Registros</button>
-            </div>
-
-            <div id="vista-nuevo">
-                <form id="serviceForm" class="p-6" onsubmit="generarHoja(event)">
-                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label><input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. ECO-01"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label><input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. BASE NORTE"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">KILOMETRAJE</label><input type="number" id="inputKm" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500" placeholder="Ej. 120000"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">MECÁNICO</label><input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. LUIS"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label><input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase"></div>
-                    </div>
-
-                    <div class="mb-6 border-b border-slate-200 pb-4">
-                        <h3 class="text-lg font-bold text-slate-800 mb-3">Seleccionar Servicios a Realizar</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                            <div class="flex items-center gap-2 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200 shadow-sm w-full">
-                                <label for="inputComentarios" class="text-sm font-bold text-amber-900">Comentarios:</label>
-                                <input type="text" id="inputComentarios" class="w-full bg-transparent border-b border-amber-300 focus:border-amber-600 outline-none text-sm text-slate-800 uppercase" placeholder="Escribe aquí...">
-                            </div>
-                            <div class="flex items-center gap-2 bg-teal-50 px-3 py-2 rounded-lg border border-teal-200 shadow-sm w-full">
-                                <label for="inputObsEsteticas" class="text-sm font-bold text-teal-900 whitespace-nowrap">Obs. Estéticas:</label>
-                                <input type="text" id="inputObsEsteticas" class="w-full bg-transparent border-b border-teal-300 focus:border-teal-600 outline-none text-sm text-slate-800 uppercase" placeholder="Golpes, rayones...">
-                            </div>
-                            <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm w-full">
-                                <label for="selectPaqueteM" class="text-sm font-bold text-blue-900 whitespace-nowrap">Grupo de Mtto:</label>
-                                <select id="selectPaqueteM" onchange="aplicarPaquete()" class="w-full px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
-                                    <option value="">- Seleccionar (Manual) -</option>
-                                    <option value="Correctivo">Correctivo</option>
-                                    <option value="M1">Grupo M1</option>
-                                    <option value="M2">Grupo M2</option>
-                                    <option value="M3">Grupo M3</option>
-                                    <option value="M4">Grupo M4</option>
-                                    <option value="M5">Grupo M5</option>
-                                    <option value="M6">Grupo M6</option>
-                                </select>
-                            </div>
+                <div class="mb-6 border-b border-slate-200 pb-4">
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Seleccionar Servicios a Realizar</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                        <div class="flex items-center gap-2 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200 shadow-sm w-full">
+                            <label for="inputComentarios" class="text-sm font-bold text-amber-900">Comentarios:</label>
+                            <input type="text" id="inputComentarios" class="w-full bg-transparent border-b border-amber-300 focus:border-amber-600 outline-none text-sm text-slate-800 uppercase" placeholder="Escribe aquí...">
+                        </div>
+                        <div class="flex items-center gap-2 bg-teal-50 px-3 py-2 rounded-lg border border-teal-200 shadow-sm w-full">
+                            <label for="inputObsEsteticas" class="text-sm font-bold text-teal-900 whitespace-nowrap">Obs. Estéticas:</label>
+                            <input type="text" id="inputObsEsteticas" class="w-full bg-transparent border-b border-teal-300 focus:border-teal-600 outline-none text-sm text-slate-800 uppercase" placeholder="Golpes, rayones...">
+                        </div>
+                        <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm w-full">
+                            <label for="selectPaqueteM" class="text-sm font-bold text-blue-900 whitespace-nowrap">Grupo de Mtto:</label>
+                            <select id="selectPaqueteM" onchange="window.aplicarPaquete()" class="w-full px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
+                                <option value="">- Seleccionar (Manual) -</option>
+                                <option value="Correctivo">Correctivo</option>
+                                <option value="M1">Grupo M1</option>
+                                <option value="M2">Grupo M2</option>
+                                <option value="M3">Grupo M3</option>
+                                <option value="M4">Grupo M4</option>
+                                <option value="M5">Grupo M5</option>
+                                <option value="M6">Grupo M6</option>
+                            </select>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container"></div>
-
-                    <div class="flex justify-end gap-4 border-t pt-6">
-                        <button type="button" onclick="limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
-                        <button type="submit" class="py-2 px-8 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">Generar y Guardar</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="vista-historial" class="hidden p-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-                    <h2 class="text-xl font-bold text-slate-800">Servicios Registrados</h2>
-                    <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <input type="text" id="buscadorHistorial" onkeyup="filtrarHistorial()" placeholder="Buscar Económico..." class="block w-full pl-3 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition-shadow">
-                        <button onclick="descargarExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow flex items-center gap-2 transition-colors text-sm whitespace-nowrap">Descargar Excel</button>
-                    </div>
                 </div>
-                <div class="overflow-x-auto rounded-lg border border-slate-200">
-                    <table class="min-w-full divide-y divide-slate-200 text-sm">
-                        <thead class="bg-slate-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left font-bold text-slate-600">Fecha</th>
-                                <th class="px-4 py-3 text-left font-bold text-slate-600">Económico</th>
-                                <th class="px-4 py-3 text-left font-bold text-slate-600">Base / Km / Mecánico</th>
-                                <th class="px-4 py-3 text-left font-bold text-slate-600 w-1/2">Servicios Realizados</th>
-                                <th class="px-4 py-3 text-right font-bold text-slate-600">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-historial-body" class="bg-white divide-y divide-slate-200"></tbody>
-                    </table>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container"></div>
+
+                <div class="flex justify-end gap-4 border-t pt-6">
+                    <button type="button" onclick="window.limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
+                    <button type="submit" id="btnGenerar" class="py-2 px-8 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">Generar y Guardar</button>
                 </div>
-                <p id="mensaje-vacio" class="text-center text-slate-500 mt-6 hidden">No hay registros guardados todavía.</p>
+            </form>
+        </div>
+
+        <div id="vista-historial" class="hidden p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                <h2 class="text-xl font-bold text-slate-800">Servicios Registrados</h2>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <input type="text" id="buscadorHistorial" onkeyup="window.filtrarHistorial()" placeholder="Buscar Económico..." class="block w-full pl-3 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition-shadow">
+                    <button onclick="window.descargarExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow flex items-center gap-2 transition-colors text-sm whitespace-nowrap">Descargar Excel</button>
+                </div>
             </div>
+            <div class="overflow-x-auto rounded-lg border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 text-sm">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-bold text-slate-600">Fecha</th>
+                            <th class="px-4 py-3 text-left font-bold text-slate-600">Económico</th>
+                            <th class="px-4 py-3 text-left font-bold text-slate-600">Base / Km / Mecánico</th>
+                            <th class="px-4 py-3 text-left font-bold text-slate-600 w-1/2">Servicios Realizados</th>
+                            <th class="px-4 py-3 text-right font-bold text-slate-600">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-historial-body" class="bg-white divide-y divide-slate-200"></tbody>
+                </table>
+            </div>
+            <p id="mensaje-vacio" class="text-center text-slate-500 mt-6 hidden">No hay registros guardados todavía.</p>
+        </div>
+    </div>
+</div>
+
+<div id="print-container">
+    <div id="botones-impresion" class="no-print bg-slate-800 p-4 flex flex-col md:flex-row justify-between items-center shadow-md mb-4 sticky top-0 z-50">
+        <button id="btn-volver-ui" onclick="window.volverUI()" class="px-4 py-2 bg-slate-600 text-white rounded font-bold hover:bg-slate-500 transition-colors text-sm mb-2 md:mb-0">⬅️ Volver al Inicio</button>
+        <div class="flex gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700">
+            <button onclick="window.toggleHojas('servicio')" id="btn-tg-servicio" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">1. Ver Servicio</button>
+            <button onclick="window.toggleHojas('recepcion')" id="btn-tg-recepcion" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">2. Ver Recepción</button>
+            <button onclick="window.toggleHojas('ambas')" id="btn-tg-ambas" class="px-3 py-1.5 rounded text-sm font-bold bg-blue-600 text-white shadow">Ambas Hojas</button>
+        </div>
+        <button onclick="window.print()" class="px-6 py-2 bg-green-500 text-white rounded font-black hover:bg-green-600 shadow-md transition-colors text-lg flex items-center gap-2 mt-2 md:mt-0">IMPRIMIR AHORA</button>
+    </div>
+
+    <div id="hoja-servicio-container" class="formato-servicio">
+        <div class="hoja-header" style="justify-content: space-between;">
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-start;">
+                <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;">
+            </div>
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-end;">
+                <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;">
+            </div>
+        </div>
+        <div class="title-section">
+            <h1 style="font-weight: 900;">DESCRIPCIÓN DEL SERVICIO.</h1>
+            <div id="print-notificacion-correctivo" class="notificacion-correctivo hidden">SERVICIO CORRECTIVO</div>
+        </div>
+        <div class="info-row">
+            <div class="info-field"><span>ECONOMICO.</span> <span class="info-line" id="print-eco" style="width: 60px;"></span></div>
+            <div class="info-field"><span>BASE/RUTA.</span> <span class="info-line" id="print-base" style="width: 100px;"></span></div>
+            <div class="info-field"><span>KILOMETRAJE.</span> <span class="info-line" id="print-km" style="width: 80px;"></span></div>
+            <div class="info-field"><span>FECHA.</span> <span class="info-line" id="print-fecha" style="width: 80px;"></span></div>
+        </div>
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th class="col-desc">DESCRIPCION DEL SERVICIO.</th>
+                    <th class="col-actividades">ACTIVIDADES A<br>REALIZAR</th>
+                    <th class="col-sino">ACTIVIDADES<br>REALIZADAS</th>
+                    <th class="col-persona">PERSONA QUE REALIZO Y/O<br>REVISO</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body"></tbody>
+        </table>
+        <div style="margin-top: 10px;">
+            <div style="font-weight: bold; font-size: 10px; letter-spacing: 1px; padding-left: 2px;">COMENTARIOS.</div>
+            <div id="print-comentarios-box" style="display: flex; flex-direction: column; font-size: 10px; min-height: 80px;"></div>
+        </div>
+        <div style="margin-top: 25px; display: flex; justify-content: center;">
+            <div style="width: 250px; text-align: center;">
+                <div style="border-bottom: 1px solid black; margin-bottom: 4px;"></div>
+                <div style="font-weight: bold; font-size: 10px; letter-spacing: 1px;">NOMBRE Y FIRMA</div>
+            </div>
+        </div>
+        <div class="footer-info"> 
+            <strong>PRIV. SIN NOMBRE #101</strong><br>COL. TORRES DE SANTO DOMINGO<br>SAN NICOLAS DE LOS GARZA, N.L.<br>C.P. 66440
         </div>
     </div>
 
-    <div id="print-container">
-        <div id="botones-impresion" class="no-print bg-slate-800 p-4 flex flex-col md:flex-row justify-between items-center shadow-md mb-4 sticky top-0 z-50">
-            <button id="btn-volver-ui" onclick="volverUI()" class="px-4 py-2 bg-slate-600 text-white rounded font-bold hover:bg-slate-500 transition-colors text-sm mb-2 md:mb-0">⬅️ Volver al Inicio</button>
-            <div class="flex gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700">
-                <button onclick="toggleHojas('servicio')" id="btn-tg-servicio" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">1. Ver Servicio</button>
-                <button onclick="toggleHojas('recepcion')" id="btn-tg-recepcion" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">2. Ver Recepción</button>
-                <button onclick="toggleHojas('ambas')" id="btn-tg-ambas" class="px-3 py-1.5 rounded text-sm font-bold bg-blue-600 text-white shadow">Ambas Hojas</button>
+    <div id="hoja-recepcion-container" class="formato-recepcion salto-pagina hidden-hoja">
+        <div class="hoja-header" style="justify-content: space-between;">
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-start;">
+                <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;">
             </div>
-            <button onclick="window.print()" class="px-6 py-2 bg-green-500 text-white rounded font-black hover:bg-green-600 shadow-md transition-colors text-lg flex items-center gap-2 mt-2 md:mt-0">IMPRIMIR AHORA</button>
-        </div>
-
-        <div id="hoja-servicio-container" class="formato-servicio">
-            <div class="hoja-header" style="justify-content: space-between;">
-                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-start;">
-                    <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;">
-                </div>
-                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-end;">
-                    <img src="logo_goldendragon.png" alt="Logo Golden Dragon" style="max-width: 100%; max-height: 60px; object-fit: contain;" onerror="this.src='logo_goldendragon.jpg'">
-                </div>
-            </div>
-            <div class="title-section">
-                <h1 style="font-weight: 900;">DESCRIPCIÓN DEL SERVICIO.</h1>
-                <div id="print-notificacion-correctivo" class="notificacion-correctivo hidden">SERVICIO CORRECTIVO</div>
-            </div>
-            <div class="info-row">
-                <div class="info-field"><span>ECONOMICO.</span> <span class="info-line" id="print-eco" style="width: 60px;"></span></div>
-                <div class="info-field"><span>BASE/RUTA.</span> <span class="info-line" id="print-base" style="width: 100px;"></span></div>
-                <div class="info-field"><span>KILOMETRAJE.</span> <span class="info-line" id="print-km" style="width: 80px;"></span></div>
-                <div class="info-field"><span>FECHA.</span> <span class="info-line" id="print-fecha" style="width: 80px;"></span></div>
-            </div>
-            <table class="table-container">
-                <thead>
-                    <tr>
-                        <th class="col-desc">DESCRIPCION DEL SERVICIO.</th>
-                        <th class="col-actividades">ACTIVIDADES A<br>REALIZAR</th>
-                        <th class="col-sino">ACTIVIDADES<br>REALIZADAS</th>
-                        <th class="col-persona">PERSONA QUE REALIZO Y/O<br>REVISO</th>
-                    </tr>
-                </thead>
-                <tbody id="print-table-body"></tbody>
-            </table>
-            <div style="margin-top: 10px;">
-                <div style="font-weight: bold; font-size: 10px; letter-spacing: 1px; padding-left: 2px;">COMENTARIOS.</div>
-                <div id="print-comentarios-box" style="display: flex; flex-direction: column; font-size: 10px; min-height: 80px;"></div>
-            </div>
-            <div style="margin-top: 25px; display: flex; justify-content: center;">
-                <div style="width: 250px; text-align: center;">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 4px;"></div>
-                    <div style="font-weight: bold; font-size: 10px; letter-spacing: 1px;">NOMBRE Y FIRMA</div>
-                </div>
-            </div>
-            <div class="footer-info"> 
-                <strong>PRIV. SIN NOMBRE #101</strong><br>COL. TORRES DE SANTO DOMINGO<br>SAN NICOLAS DE LOS GARZA, N.L.<br>C.P. 66440
+            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-end;">
+                <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;">
             </div>
         </div>
-
-        <div id="hoja-recepcion-container" class="formato-recepcion salto-pagina hidden-hoja">
-            <div class="hoja-header" style="justify-content: space-between;">
-                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-start;">
-                    <img src="https://res.cloudinary.com/dygb7qjgt/image/upload/v1776721918/WhatsApp_Image_2026-04-20_at_11.10.30_AM_bipr97.jpg" alt="Logo e.go" style="max-width: 100%; max-height: 60px; object-fit: contain;">
-                </div>
-                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; width: 190px; align-items: flex-end;">
-                    <img src="logo_goldendragon.png" alt="Logo Golden Dragon" style="max-width: 100%; max-height: 60px; object-fit: contain;" onerror="this.src='logo_goldendragon.jpg'">
-                </div>
-            </div>
-
-            <div class="fr-title">FORMATO ENTREGA / RECEPCIÓN.</div>
-
-            <div class="fr-row">
-                <span class="fr-label">NUM. ECONÓMICO:</span> 
-                <span class="fr-line-fixed" style="width: 100px;" id="fr-eco"></span>
-                <span class="fr-label" style="margin-left: 20px;">RUTA / BASE:</span> 
-                <span class="fr-line-fixed" style="width: 150px;" id="fr-base"></span>
-            </div>
-
-            <div class="fr-row">
-                <span class="fr-label">KILOMETROS ENTRADA.</span> 
-                <span class="fr-line-fixed" style="width: 150px;" id="fr-km-recepcion"></span>
-            </div>
-
-            <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
-            
-            <div class="grid-fotos-reales" style="margin-bottom: 15px;">
-                <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Frontal'"></div>
-                <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Trasera'"></div>
-                <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Der'"></div>
-                <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Izq'"></div>
-            </div>
-
-            <div class="fr-obs-box" id="fr-caja-obs-recepcion">
-                <div class="fr-obs-title">OBSERVACIONES.</div>
-                <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-            </div>
-
-            <div class="fr-firmas">
-                <div class="fr-firma-box">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                    <div>FIRMA DE INGRESO DE UNIDAD A GD</div>
-                    <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                        <span style="margin-right: 5px;">FECHA.</span>
-                        <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;" id="fr-fecha-ingreso"></span>
-                    </div>
-                </div>
-                <div class="fr-firma-box">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                    <div>FIRMA DE SALIDA DE GD</div>
-                    <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                        <span style="margin-right: 5px;">FECHA.</span>
-                        <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;"></span>
-                    </div>
+        <div class="fr-title">FORMATO ENTREGA / RECEPCIÓN.</div>
+        <div class="fr-row">
+            <span class="fr-label">NUM. ECONÓMICO:</span> 
+            <span class="fr-line-fixed" style="width: 100px;" id="fr-eco"></span>
+            <span class="fr-label" style="margin-left: 20px;">RUTA / BASE:</span> 
+            <span class="fr-line-fixed" style="width: 150px;" id="fr-base"></span>
+        </div>
+        <div class="fr-row">
+            <span class="fr-label">KILOMETROS ENTRADA.</span> 
+            <span class="fr-line-fixed" style="width: 150px;" id="fr-km-recepcion"></span>
+        </div>
+        <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
+        <div class="grid-fotos-reales" style="margin-bottom: 15px;">
+            <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Frontal'"></div>
+            <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Trasera'"></div>
+            <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Der'"></div>
+            <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Izq'"></div>
+        </div>
+        <div class="fr-obs-box" id="fr-caja-obs-recepcion">
+            <div class="fr-obs-title">OBSERVACIONES.</div>
+            <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
+        </div>
+        <div class="fr-firmas">
+            <div class="fr-firma-box">
+                <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
+                <div>FIRMA DE INGRESO DE UNIDAD A GD</div>
+                <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
+                    <span style="margin-right: 5px;">FECHA.</span>
+                    <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;" id="fr-fecha-ingreso"></span>
                 </div>
             </div>
-
-            <div class="footer-info"> 
-                <strong>PRIV. SIN NOMBRE #101</strong><br>COL. TORRES DE SANTO DOMINGO<br>SAN NICOLAS DE LOS GARZA, N.L.<br>C.P. 66440
+            <div class="fr-firma-box">
+                <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
+                <div>FIRMA DE SALIDA DE GD</div>
+                <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
+                    <span style="margin-right: 5px;">FECHA.</span>
+                    <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;"></span>
+                </div>
             </div>
+        </div>
+        <div class="footer-info"> 
+            <strong>PRIV. SIN NOMBRE #101</strong><br>COL. TORRES DE SANTO DOMINGO<br>SAN NICOLAS DE LOS GARZA, N.L.<br>C.P. 66440
         </div>
     </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDoc, where, limit, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDoc, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDLywqH8iBbnlSwwRFhWVbZ4mjEkz6Xs_8", 
-            authDomain: "gestion-servicios-ego.firebaseapp.com", 
-            projectId: "gestion-servicios-ego",
-            storageBucket: "gestion-servicios-ego.firebasestorage.app",
-            messagingSenderId: "378018276879",
-            appId: "1:378018276879:web:310b4d30b0d3d4e8c6257a"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLywqH8iBbnlSwwRFhWVbZ4mjEkz6Xs_8",
+        authDomain: "gestion-servicios-ego.firebaseapp.com",
+        projectId: "gestion-servicios-ego",
+        storageBucket: "gestion-servicios-ego.firebasestorage.app",
+        messagingSenderId: "378018276879",
+        appId: "1:378018276879:web:310b4d30b0d3d4e8c6257a"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const serviciosRef = collection(db, "servicios");
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const serviciosRef = collection(db, "servicios");
+    const URL_WEBAPP = "https://script.google.com/macros/s/AKfycbzSYGJNO-VSxYa8v0EGYYJVsJy5RPw1rkurLX-jDcFux4WTNBr6JHanINJbSeHkeAlRMw/exec";
 
-        const URL_WEBAPP = "https://script.google.com/macros/s/AKfycbzSYGJNO-VSxYa8v0EGYYJVsJy5RPw1rkurLX-jDcFux4WTNBr6JHanINJbSeHkeAlRMw/exec";
+    let historialGlobal = [];
+    let modoSoloLectura = false;
 
-        let historialGlobal = [];
-        let modoSoloLectura = false;
+    const params = new URLSearchParams(window.location.search);
+    window.urlFotoFrontal = params.get('f_frontal') || "";
+    window.urlFotoTrasera = params.get('f_trasera') || "";
+    window.urlFotoDerecha = params.get('f_derecha') || "";
+    window.urlFotoIzquierda = params.get('f_izquierda') || "";
+    window.obsEsteticas = params.get('obsest') || "";
+    window.filaExcelOrigen = params.get('fila');
+    window.hojaExcelOrigen = params.get('hoja');
+    window.idDocFused = null;
 
-        const params = new URLSearchParams(window.location.search);
-        window.urlFotoFrontal = params.get('f_frontal') || "";
-        window.urlFotoTrasera = params.get('f_trasera') || "";
-        window.urlFotoDerecha = params.get('f_derecha') || "";
-        window.urlFotoIzquierda = params.get('f_izquierda') || "";
-        window.obsEsteticas = params.get('obsest') || "";
-        window.filaExcelOrigen = params.get('fila');
-        window.hojaExcelOrigen = params.get('hoja');
+    const listaServicios = [
+        "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
+        "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
+        "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "%DEGRADO DE ANTICONGELANTE", "NIVEL DE ANTICONGELANTE",
+        "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO FILTROS DE TRANSMISION",
+        "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
+        "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN",
+        "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS",
+        "CAMBIO DE ANTICONGELANTE", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "REVISION DE BALATAS",
+        "CAMBIO DE BALATAS TRASERAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE FILTRO HIDRAULICO",
+        "CAMBIO DE FILTRO DE SECADOR", "CAMBIO DE SECADOR COMPLETO", "APRIETE DE TERMINALES",
+        "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"
+    ];
+
+    const configuracionPaquetes = {
+        "M1": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION SEMESTRAL DE CLIMA"],
+        "M2": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR"],
+        "M3": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL", "APRIETE DE TERMINALES"],
+        "M4": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "%DEGRADO DE ANTICONGELANTE", "NIVEL DE ANTICONGELANTE", "CAMBIO DE ANTICONGELANTE"],
+        "M5": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO DE SECADOR COMPLETO", "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"],
+        "M6": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "CAMBIO DE FILTRO HIDRAULICO"]
+    };
+
+    function aplicarPaquete() {
+        const paquete = document.getElementById('selectPaqueteM').value;
+        listaServicios.forEach((_, i) => {
+            const chk = document.getElementById(`chk_${i}`);
+            if (chk) chk.checked = false;
+        });
+        if (paquete && configuracionPaquetes[paquete]) {
+            configuracionPaquetes[paquete].forEach(s => {
+                const idx = listaServicios.indexOf(s);
+                const chk = document.getElementById(`chk_${idx}`);
+                if (idx !== -1 && chk) chk.checked = true;
+            });
+        }
+    }
+
+    function limpiarFormularioCompleto() {
+        document.getElementById('serviceForm').reset();
+        document.getElementById('selectPaqueteM').value = "";
+        restaurarFecha();
         window.idDocFused = null;
+    }
 
-        const listaServicios = [
-            "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
-            "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
-            "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "%DEGRADO DE ANTICONGELANTE", "NIVEL DE ANTICONGELANTE",
-            "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO FILTROS DE TRANSMISION",
-            "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
-            "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN",
-            "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS",
-            "CAMBIO DE ANTICONGELANTE", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "REVISION DE BALATAS",
-            "CAMBIO DE BALATAS TRASERAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE FILTRO HIDRAULICO",
-            "CAMBIO DE FILTRO DE SECADOR", "CAMBIO DE SECADOR COMPLETO", "APRIETE DE TERMINALES",
-            "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"
-        ];
+    function restaurarFecha() {
+        const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10);
+        if (document.getElementById('inputFecha')) document.getElementById('inputFecha').value = localISOTime;
+    }
 
-        const configuracionPaquetes = {
-            "M1": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION SEMESTRAL DE CLIMA"],
-            "M2": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR"],
-            "M3": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL", "APRIETE DE TERMINALES"],
-            "M4": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "%DEGRADO DE ANTICONGELANTE", "NIVEL DE ANTICONGELANTE", "CAMBIO DE ANTICONGELANTE"],
-            "M5": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO DE SECADOR COMPLETO", "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"],
-            "M6": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "CAMBIO DE FILTRO HIDRAULICO"]
-        };
+    function cargarCheckboxes() {
+        const container = document.getElementById('checkbox-container');
+        if (!container) return;
+        container.innerHTML = '';
+        listaServicios.forEach((servicio, index) => {
+            const div = document.createElement('div');
+            div.className = "flex items-start gap-2 hover:bg-blue-50 p-1 rounded transition-colors";
+            div.innerHTML = `<input type="checkbox" id="chk_${index}" value="${index}" class="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"><label for="chk_${index}" class="text-sm text-gray-700 cursor-pointer select-none leading-tight">${servicio}</label>`;
+            container.appendChild(div);
+        });
+    }
 
-        window.aplicarPaquete = function() {
-            const paqueteSeleccionado = document.getElementById('selectPaqueteM').value;
-            listaServicios.forEach((_, index) => {
-                const chk = document.getElementById(`chk_${index}`);
-                if (chk) chk.checked = false; 
-            });
-            if (paqueteSeleccionado && configuracionPaquetes[paqueteSeleccionado]) {
-                configuracionPaquetes[paqueteSeleccionado].forEach(s => {
-                    const idx = listaServicios.indexOf(s);
-                    const chk = document.getElementById(`chk_${idx}`);
-                    if(idx !== -1 && chk) chk.checked = true; 
+    function cambiarPestana(pestana) {
+        const vNuevo = document.getElementById('vista-nuevo');
+        const vHistorial = document.getElementById('vista-historial');
+        const btnN = document.getElementById('tab-btn-nuevo');
+        const btnH = document.getElementById('tab-btn-historial');
+        if (pestana === 'nuevo') {
+            vNuevo.classList.remove('hidden'); vHistorial.classList.add('hidden');
+            btnN.classList.add('border-b-2', 'border-blue-600', 'text-blue-700'); btnN.classList.remove('text-slate-500');
+            btnH.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700'); btnH.classList.add('text-slate-500');
+        } else {
+            vNuevo.classList.add('hidden'); vHistorial.classList.remove('hidden');
+            btnH.classList.add('border-b-2', 'border-blue-600', 'text-blue-700'); btnH.classList.remove('text-slate-500');
+            btnN.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700'); btnN.classList.add('text-slate-500');
+        }
+    }
+
+    function toggleHojas(vista) {
+        const hojaS = document.getElementById('hoja-servicio-container');
+        const hojaR = document.getElementById('hoja-recepcion-container');
+        const btnS = document.getElementById('btn-tg-servicio');
+        const btnR = document.getElementById('btn-tg-recepcion');
+        const btnA = document.getElementById('btn-tg-ambas');
+        [btnS, btnR, btnA].forEach(b => { b.classList.remove('bg-blue-600', 'text-white', 'shadow'); b.classList.add('text-slate-300'); });
+        if (vista === 'servicio') {
+            hojaS.classList.remove('hidden-hoja'); hojaR.classList.add('hidden-hoja');
+            btnS.classList.add('bg-blue-600', 'text-white', 'shadow'); btnS.classList.remove('text-slate-300');
+        } else if (vista === 'recepcion') {
+            hojaS.classList.add('hidden-hoja'); hojaR.classList.remove('hidden-hoja');
+            btnR.classList.add('bg-blue-600', 'text-white', 'shadow'); btnR.classList.remove('text-slate-300');
+        } else {
+            hojaS.classList.remove('hidden-hoja'); hojaR.classList.remove('hidden-hoja');
+            btnA.classList.add('bg-blue-600', 'text-white', 'shadow'); btnA.classList.remove('text-slate-300');
+        }
+    }
+
+    function generarHojaUI(datos) {
+        document.getElementById('print-eco').innerText = datos.economico;
+        document.getElementById('print-base').innerText = datos.base;
+        document.getElementById('print-km').innerText = datos.kilometraje ? new Intl.NumberFormat('es-MX').format(datos.kilometraje) : "";
+        document.getElementById('print-fecha').innerText = datos.fecha || "";
+        const notif = document.getElementById('print-notificacion-correctivo');
+        if (datos.grupo === "Correctivo") notif.classList.remove('hidden'); else notif.classList.add('hidden');
+
+        const boxComentarios = document.getElementById('print-comentarios-box');
+        if (datos.comentarios && datos.comentarios.trim()) {
+            boxComentarios.innerHTML = `<div style="padding: 2px 4px; border-bottom: 1px solid black; min-height: 16px;">${datos.comentarios}</div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div>`;
+        } else {
+            boxComentarios.innerHTML = `<div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div>`;
+        }
+
+        const tbodyPrint = document.getElementById('print-table-body');
+        tbodyPrint.innerHTML = '';
+        const palomita = '<svg style="width: 14px; height: 14px; color: #15803d; margin: 0 auto; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>';
+
+        if (datos.grupo === "Correctivo") {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="col-desc" style="background-color: #fef2f2; color: #b91c1c;">SERVICIO CORRECTIVO GENERAL (Ver comentarios)</td><td class="col-actividades">${palomita}</td><td class="col-sino">${palomita}</td><td class="col-persona" style="font-size: 8px; text-align: center; font-weight: bold;">${datos.mecanico || ''}</td>`;
+            tbodyPrint.appendChild(tr);
+        }
+
+        listaServicios.forEach(servicio => {
+            const marcado = datos.servicios && datos.servicios.includes(servicio);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="col-desc">${servicio}</td><td class="col-actividades">${marcado ? palomita : ''}</td><td class="col-sino"></td><td class="col-persona" style="font-size: 8px; text-align: center; font-weight: bold;">${marcado ? (datos.mecanico || '') : ''}</td>`;
+            tbodyPrint.appendChild(tr);
+        });
+
+        // Hoja de recepción
+        document.getElementById('fr-eco').innerText = datos.economico;
+        document.getElementById('fr-base').innerText = datos.base;
+        document.getElementById('fr-km-recepcion').innerText = datos.kilometraje ? new Intl.NumberFormat('es-MX').format(datos.kilometraje) : "";
+        document.getElementById('fr-fecha-ingreso').innerText = datos.fecha || "";
+
+        const fotos = datos.fotos || {};
+        document.getElementById('img-front').src = fotos.frontal || window.urlFotoFrontal || '';
+        document.getElementById('img-back').src = fotos.trasera || window.urlFotoTrasera || '';
+        document.getElementById('img-right').src = fotos.derecha || window.urlFotoDerecha || '';
+        document.getElementById('img-left').src = fotos.izquierda || window.urlFotoIzquierda || '';
+
+        const cajaObs = document.getElementById('fr-caja-obs-recepcion');
+        const obsTexto = datos.obsEsteticas || window.obsEsteticas || '';
+        if (obsTexto.trim()) {
+            cajaObs.innerHTML = `<div class="fr-obs-title">OBSERVACIONES.</div><div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">${obsTexto.toUpperCase()}</div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>`;
+        } else {
+            cajaObs.innerHTML = `<div class="fr-obs-title">OBSERVACIONES.</div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>`;
+        }
+    }
+
+    async function guardarEnFirebase(registro) {
+        try {
+            const esProgramacion = !params.has('unidad');
+            const estatus = esProgramacion ? "PROGRAMADO" : "COMPLETADO";
+            if (window.idDocFused) {
+                await updateDoc(doc(db, "servicios", window.idDocFused), {
+                    ...registro, estatus, timestamp: Date.now()
                 });
-            }
-        };
-
-        window.limpiarFormularioCompleto = function() {
-            document.getElementById('serviceForm').reset();
-            document.getElementById('selectPaqueteM').value = ""; 
-            restaurarFecha();
-            window.idDocFused = null;
-        };
-
-        function restaurarFecha() {
-            const tzoffset = (new Date()).getTimezoneOffset() * 60000;
-            const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 10);
-            if(document.getElementById('inputFecha')) document.getElementById('inputFecha').value = localISOTime;
-        }
-
-        function cargarCheckboxes() {
-            const containerUI = document.getElementById('checkbox-container');
-            if(!containerUI) return;
-            containerUI.innerHTML = ''; 
-            listaServicios.forEach((servicio, index) => {
-                const div = document.createElement('div');
-                div.className = "flex items-start gap-2 hover:bg-blue-50 p-1 rounded transition-colors";
-                div.innerHTML = `
-                    <input type="checkbox" id="chk_${index}" value="${index}" class="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
-                    <label for="chk_${index}" class="text-sm text-gray-700 cursor-pointer select-none leading-tight">${servicio}</label>
-                `;
-                containerUI.appendChild(div);
-            });
-        }
-
-        window.cambiarPestana = function(pestana) {
-            const vNuevo = document.getElementById('vista-nuevo');
-            const vHistorial = document.getElementById('vista-historial');
-            const btnNuevo = document.getElementById('tab-btn-nuevo');
-            const btnHistorial = document.getElementById('tab-btn-historial');
-
-            if(pestana === 'nuevo') {
-                vNuevo.classList.remove('hidden'); vHistorial.classList.add('hidden');
-                btnNuevo.classList.add('border-b-2', 'border-blue-600', 'text-blue-700'); btnNuevo.classList.remove('text-slate-500');
-                btnHistorial.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700'); btnHistorial.classList.add('text-slate-500');
+                window.idDocFused = null;
+                if (!esProgramacion) alert("✅ Servicio completado correctamente.");
             } else {
-                vNuevo.classList.add('hidden'); vHistorial.classList.remove('hidden');
-                btnHistorial.classList.add('border-b-2', 'border-blue-600', 'text-blue-700'); btnHistorial.classList.remove('text-slate-500');
-                btnNuevo.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700'); btnNuevo.classList.add('text-slate-500');
-            }
-        };
-
-        window.toggleHojas = function(vista) {
-            const hojaS = document.getElementById('hoja-servicio-container');
-            const hojaR = document.getElementById('hoja-recepcion-container');
-            const btnS = document.getElementById('btn-tg-servicio');
-            const btnR = document.getElementById('btn-tg-recepcion');
-            const btnA = document.getElementById('btn-tg-ambas');
-
-            [btnS, btnR, btnA].forEach(b => { b.classList.remove('bg-blue-600', 'text-white', 'shadow'); b.classList.add('text-slate-300'); });
-
-            if (vista === 'servicio') {
-                hojaS.classList.remove('hidden-hoja'); hojaR.classList.add('hidden-hoja');
-                btnS.classList.add('bg-blue-600', 'text-white', 'shadow'); btnS.classList.remove('text-slate-300');
-            } else if (vista === 'recepcion') {
-                hojaS.classList.add('hidden-hoja'); hojaR.classList.remove('hidden-hoja');
-                btnR.classList.add('bg-blue-600', 'text-white', 'shadow'); btnR.classList.remove('text-slate-300');
-            } else {
-                hojaS.classList.remove('hidden-hoja'); hojaR.classList.remove('hidden-hoja');
-                btnA.classList.add('bg-blue-600', 'text-white', 'shadow'); btnA.classList.remove('text-slate-300');
-            }
-        };
-
-        window.generarHoja = function(e) {
-            if(e) e.preventDefault();
-
-            const economico = document.getElementById('inputEco').value.toUpperCase();
-            const base = document.getElementById('inputBase').value.toUpperCase();
-            const kilometraje = document.getElementById('inputKm').value;
-            const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
-            const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
-            const textoObsEsteticas = document.getElementById('inputObsEsteticas').value.toUpperCase();
-            
-            if (textoObsEsteticas.trim() !== "") { window.obsEsteticas = textoObsEsteticas; }
-
-            const selectElement = document.getElementById('selectPaqueteM');
-            const valorGrupo = selectElement.value; 
-            let grupoSeleccionado = selectElement.options[selectElement.selectedIndex].text; 
-
-            if (grupoSeleccionado === "- Seleccionar (Manual) -" || document.getElementById('selectPaqueteM').value === "") {
-                grupoSeleccionado = "Personalizado";
-            }
-
-            const fechaInput = document.getElementById('inputFecha').value;
-            let fechaString = "";
-            if (fechaInput) {
-                const [year, month, day] = fechaInput.split('-');
-                fechaString = `${day}/${month}/${year}`;
-            }
-
-            document.getElementById('print-eco').innerText = economico;
-            document.getElementById('print-base').innerText = base;
-            document.getElementById('print-km').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
-            document.getElementById('print-fecha').innerText = fechaString;
-
-            const notificacionC = document.getElementById('print-notificacion-correctivo');
-            if(valorGrupo === "Correctivo") { notificacionC.classList.remove('hidden'); } else { notificacionC.classList.add('hidden'); }
-
-            const boxComentarios = document.getElementById('print-comentarios-box');
-            if(textoComentarios.trim() !== '') {
-                boxComentarios.innerHTML = `
-                    <div style="padding: 2px 4px; border-bottom: 1px solid black; min-height: 16px;">${textoComentarios}</div>
-                    <div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div>
-                    <div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div>
-                `;
-            } else {
-                boxComentarios.innerHTML = `
-                    <div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div>
-                    <div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div><div style="border-bottom: 1px solid black; height: 16px;"></div>
-                `;
-            }
-
-            const tbodyPrint = document.getElementById('print-table-body');
-            tbodyPrint.innerHTML = ''; 
-            let serviciosMarcados = []; 
-            const palomitaVerde = `<svg style="width: 14px; height: 14px; color: #15803d; margin: 0 auto; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>`;
-
-            if (valorGrupo === "Correctivo") {
-                const trCorrectivo = document.createElement('tr');
-                trCorrectivo.innerHTML = `
-                    <td class="col-desc" style="background-color: #fef2f2; color: #b91c1c;">SERVICIO CORRECTIVO GENERAL (Ver comentarios)</td>
-                    <td class="col-actividades" style="padding: 0;">${palomitaVerde}</td>
-                    <td class="col-sino">${palomitaVerde}</td>
-                    <td class="col-persona" style="font-size: 8px; text-align: center; vertical-align: middle; font-weight: bold;">${mecanico}</td>
-                `;
-                tbodyPrint.appendChild(trCorrectivo);
-            }
-
-            listaServicios.forEach((servicio, index) => {
-                const chk = document.getElementById(`chk_${index}`);
-                const isChecked = chk ? chk.checked : false; 
-                const marca = isChecked ? palomitaVerde : ''; 
-                const persona = isChecked ? mecanico : '';
-                if(isChecked) serviciosMarcados.push(servicio);
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="col-desc">${servicio}</td>
-                    <td class="col-actividades" style="padding: 0;">${marca}</td>
-                    <td class="col-sino"></td>
-                    <td class="col-persona" style="font-size: 8px; text-align: center; vertical-align: middle; font-weight: bold;">${persona}</td>
-                `;
-                tbodyPrint.appendChild(tr);
-            });
-
-            document.getElementById('fr-eco').innerText = economico;
-            document.getElementById('fr-base').innerText = base;
-            document.getElementById('fr-km-recepcion').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
-            document.getElementById('fr-fecha-ingreso').innerText = fechaString;
-
-            if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
-            if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
-            if(window.urlFotoDerecha) document.getElementById('img-right').src = window.urlFotoDerecha;
-            if(window.urlFotoIzquierda) document.getElementById('img-left').src = window.urlFotoIzquierda;
-
-            const cajaObs = document.getElementById('fr-caja-obs-recepcion');
-            if(cajaObs) {
-                if(window.obsEsteticas && window.obsEsteticas.trim() !== '') {
-                    cajaObs.innerHTML = `
-                        <div class="fr-obs-title">OBSERVACIONES.</div>
-                        <div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">
-                            ${decodeURIComponent(window.obsEsteticas).toUpperCase()}
-                        </div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-                    `;
-                } else {
-                    cajaObs.innerHTML = `
-                        <div class="fr-obs-title">OBSERVACIONES.</div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-                    `;
-                }
-            }
-
-            if(!modoSoloLectura && (serviciosMarcados.length > 0 || valorGrupo === "Correctivo")) {
-                guardarEnFirebase({ 
-                    fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
-                    mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
-                    fotos: { frontal: window.urlFotoFrontal, trasera: window.urlFotoTrasera, derecha: window.urlFotoDerecha, izquierda: window.urlFotoIzquierda }
+                const docRef = await addDoc(serviciosRef, {
+                    ...registro, estatus, timestamp: Date.now()
                 });
+                if (esProgramacion) alert("⏳ Servicio pre-programado correctamente.");
             }
+            // Notificar a Google Sheets si hay filaExcelOrigen
+            if (window.filaExcelOrigen && window.hojaExcelOrigen) {
+                fetch(URL_WEBAPP, {
+                    method: 'POST', mode: 'no-cors',
+                    body: JSON.stringify({ action: "updateLink", hoja: window.hojaExcelOrigen, fila: window.filaExcelOrigen, link: "https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?ver=" + (window.idDocFused || "" ) })
+                }).catch(() => {});
+            }
+        } catch (e) {
+            console.error("Error Firestore:", e);
+            throw e;
+        }
+    }
 
-            document.getElementById('ui-container').style.display = 'none';
-            document.getElementById('print-container').style.display = 'block';
-            toggleHojas('ambas'); 
-
-            if(document.getElementById('btn-volver-ui')) document.getElementById('btn-volver-ui').style.display = 'inline-block';
-            window.scrollTo(0, 0); 
+    // Generación desde el formulario
+    function generarHoja(e) {
+        if (e) e.preventDefault();
+        const economico = document.getElementById('inputEco').value.toUpperCase();
+        const base = document.getElementById('inputBase').value.toUpperCase();
+        const kilometraje = document.getElementById('inputKm').value;
+        const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
+        const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
+        const textoObsEsteticas = document.getElementById('inputObsEsteticas').value.toUpperCase();
+        const selectElement = document.getElementById('selectPaqueteM');
+        const valorGrupo = selectElement.value;
+        let grupoSeleccionado = selectElement.options[selectElement.selectedIndex].text;
+        if (grupoSeleccionado === "- Seleccionar (Manual) -" || valorGrupo === "") grupoSeleccionado = "Personalizado";
+        const fechaInput = document.getElementById('inputFecha').value;
+        let fechaString = "";
+        if (fechaInput) {
+            const [year, month, day] = fechaInput.split('-');
+            fechaString = `${day}/${month}/${year}`;
+        }
+        let serviciosMarcados = [];
+        listaServicios.forEach((s, i) => {
+            const chk = document.getElementById(`chk_${i}`);
+            if (chk && chk.checked) serviciosMarcados.push(s);
+        });
+        const datos = {
+            economico, base, kilometraje, mecanico,
+            comentarios: textoComentarios,
+            obsEsteticas: textoObsEsteticas || window.obsEsteticas,
+            servicios: serviciosMarcados,
+            grupo: grupoSeleccionado,
+            fecha: fechaString,
+            fotos: {
+                frontal: window.urlFotoFrontal,
+                trasera: window.urlFotoTrasera,
+                derecha: window.urlFotoDerecha,
+                izquierda: window.urlFotoIzquierda
+            }
         };
 
-        async function guardarEnFirebase(registro) {
-            try {
-                let docIdFinal = "";
-                const esProgramacionOficina = !params.has('unidad');
-                const estatusFinal = esProgramacionOficina ? "PROGRAMADO" : "COMPLETADO";
+        if (!modoSoloLectura) {
+            guardarEnFirebase(datos).then(() => {
+                mostrarHoja(datos);
+            }).catch(err => alert("Error al guardar: " + err.message));
+        } else {
+            mostrarHoja(datos);
+        }
+    }
 
-                if (window.idDocFused) {
-                    const docRef = doc(db, "servicios", window.idDocFused);
-                    await updateDoc(docRef, {
-                        economico: registro.economico, fecha: registro.fecha, base: registro.base, kilometraje: registro.kilometraje,
-                        mecanico: registro.mecanico, comentarios: registro.comentarios || '', obsEsteticas: registro.obsEsteticas || '', servicios: registro.servicios,
-                        grupo: registro.grupo, fotos: registro.fotos || null, timestamp: Date.now(), estatus: estatusFinal
-                    });
-                    docIdFinal = window.idDocFused;
-                    window.idDocFused = null; 
-                    alert("✅ SERVICIO FUSIONADO Y COMPLETADO CON ÉXITO");
-                } else {
-                    const docRef = await addDoc(serviciosRef, {
-                        economico: registro.economico, fecha: registro.fecha, base: registro.base, kilometraje: registro.kilometraje,
-                        mecanico: registro.mecanico, comentarios: registro.comentarios || '', obsEsteticas: registro.obsEsteticas || '', servicios: registro.servicios,
-                        grupo: registro.grupo, fotos: registro.fotos || null, timestamp: Date.now(), estatus: estatusFinal
-                    });
-                    docIdFinal = docRef.id;
-                    if(esProgramacionOficina) alert("⏳ BORRADOR GUARDADO. La unidad quedó pre-programada correctamente.");
-                }
+    function mostrarHoja(datos) {
+        generarHojaUI(datos);
+        document.getElementById('ui-container').style.display = 'none';
+        document.getElementById('print-container').style.display = 'block';
+        toggleHojas('ambas');
+        window.scrollTo(0, 0);
+    }
 
-                if (window.filaExcelOrigen && window.hojaExcelOrigen) {
-                    const linkUnico = "https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?ver=" + docIdFinal;
-                    fetch(URL_WEBAPP, {
-                        method: 'POST', mode: 'no-cors',
-                        body: JSON.stringify({ action: "updateLink", hoja: window.hojaExcelOrigen, fila: window.filaExcelOrigen, link: linkUnico })
-                    }).catch(e => console.log("Aviso de fetch:", e));
-                }
-            } catch (e) { console.error("Error al guardar: ", e); }
+    async function cargarHojaDesdeFirebase(docId) {
+        try {
+            const docSnap = await getDoc(doc(db, "servicios", docId));
+            if (!docSnap.exists()) {
+                document.getElementById('print-container').innerHTML = '<div class="text-center p-10 font-bold text-lg text-red-600">El registro no existe.</div>';
+                document.getElementById('print-container').style.display = 'block';
+                document.getElementById('ui-container').style.display = 'none';
+                return;
+            }
+            const datos = docSnap.data();
+            modoSoloLectura = true;
+            document.getElementById('btnGenerar').style.display = 'none'; // Ocultar botón generar en solo lectura
+            document.getElementById('inputEco').value = datos.economico || '';
+            document.getElementById('inputBase').value = datos.base || '';
+            document.getElementById('inputKm').value = datos.kilometraje || '';
+            document.getElementById('inputMecanico').value = datos.mecanico || '';
+            document.getElementById('inputComentarios').value = datos.comentarios || '';
+            document.getElementById('inputObsEsteticas').value = datos.obsEsteticas || '';
+            if (datos.fecha) {
+                const partes = datos.fecha.split('/');
+                if (partes.length === 3) document.getElementById('inputFecha').value = `${partes[2]}-${partes[1]}-${partes[0]}`;
+            }
+            window.urlFotoFrontal = datos.fotos?.frontal || '';
+            window.urlFotoTrasera = datos.fotos?.trasera || '';
+            window.urlFotoDerecha = datos.fotos?.derecha || '';
+            window.urlFotoIzquierda = datos.fotos?.izquierda || '';
+            window.obsEsteticas = datos.obsEsteticas || '';
+
+            cargarCheckboxes();
+            await new Promise(resolve => setTimeout(resolve, 100));
+            (datos.servicios || []).forEach(s => {
+                const idx = listaServicios.indexOf(s);
+                const chk = document.getElementById(`chk_${idx}`);
+                if (chk) chk.checked = true;
+            });
+            if (datos.grupo === "Correctivo") document.getElementById('selectPaqueteM').value = "Correctivo";
+            mostrarHoja(datos);
+        } catch (error) {
+            console.error("Error cargando hoja:", error);
+        }
+    }
+
+    // Búsqueda de programados para fusión
+    async function cargarYSincronizarProgramado(unidad) {
+        const q = query(serviciosRef, where("economico", "==", unidad));
+        const snapshot = await getDocs(q);
+        let serviciosPre = [];
+        let grupoPre = "";
+        window.idDocFused = null;
+        if (!snapshot.empty) {
+            const programados = snapshot.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .filter(item => item.estatus === "PROGRAMADO");
+            if (programados.length > 0) {
+                programados.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                const prog = programados[0];
+                window.idDocFused = prog.id;
+                serviciosPre = prog.servicios || [];
+                grupoPre = prog.grupo || "";
+            }
+        }
+        if (grupoPre) {
+            document.getElementById('selectPaqueteM').value = grupoPre;
+        } else if (params.get('manto')) {
+            document.getElementById('selectPaqueteM').value = params.get('manto');
+            aplicarPaquete();
+        }
+        listaServicios.forEach((s, i) => {
+            const chk = document.getElementById(`chk_${i}`);
+            if (chk) chk.checked = serviciosPre.includes(s);
+        });
+    }
+
+    // Flujo automático
+    async function generarHojaAutomatica() {
+        const economico = document.getElementById('inputEco').value.toUpperCase();
+        const base = document.getElementById('inputBase').value.toUpperCase();
+        const kilometraje = document.getElementById('inputKm').value;
+        const mecanico = document.getElementById('inputMecanico').value.toUpperCase() || 'PENDIENTE';
+        const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
+        const textoObsEsteticas = document.getElementById('inputObsEsteticas').value.toUpperCase();
+        const selectElement = document.getElementById('selectPaqueteM');
+        const valorGrupo = selectElement.value;
+        let grupoSeleccionado = selectElement.options[selectElement.selectedIndex].text;
+        if (grupoSeleccionado === "- Seleccionar (Manual) -" || valorGrupo === "") grupoSeleccionado = "Personalizado";
+        const fechaInput = document.getElementById('inputFecha').value;
+        let fechaString = "";
+        if (fechaInput) {
+            const [year, month, day] = fechaInput.split('-');
+            fechaString = `${day}/${month}/${year}`;
+        }
+        let serviciosMarcados = [];
+        listaServicios.forEach((s, i) => {
+            const chk = document.getElementById(`chk_${i}`);
+            if (chk && chk.checked) serviciosMarcados.push(s);
+        });
+        const datos = {
+            economico, base, kilometraje, mecanico,
+            comentarios: textoComentarios,
+            obsEsteticas: textoObsEsteticas || window.obsEsteticas,
+            servicios: serviciosMarcados,
+            grupo: grupoSeleccionado,
+            fecha: fechaString,
+            fotos: {
+                frontal: window.urlFotoFrontal,
+                trasera: window.urlFotoTrasera,
+                derecha: window.urlFotoDerecha,
+                izquierda: window.urlFotoIzquierda
+            }
+        };
+        await guardarEnFirebase(datos);
+        mostrarHoja(datos);
+    }
+
+    function borrarRegistro(id) {
+        if (confirm("¿Borrar este registro?")) deleteDoc(doc(db, "servicios", id));
+    }
+
+    function descargarExcel() {
+        if (historialGlobal.length === 0) { alert("Sin registros."); return; }
+        let csv = '\uFEFF' + "FECHA,ESTATUS,ECONOMICO,BASE,KILOMETRAJE,MECANICO,GRUPO,COMENTARIOS,OBS_ESTETICAS,CANTIDAD,MANTENIMIENTOS\n";
+        historialGlobal.forEach(r => {
+            let det = (r.servicios || []).join(" / ").replace(/"/g, '""').replace(/\n/g, ' ');
+            let com = (r.comentarios || '').replace(/"/g, '""').replace(/\n/g, ' ');
+            let obs = (r.obsEsteticas || '').replace(/"/g, '""').replace(/\n/g, ' ');
+            csv += `"${r.fecha}","${r.estatus || 'COMPLETADO'}","${r.economico}","${r.base}","${r.kilometraje}","${r.mecanico}","${r.grupo}","${com}","${obs}","${(r.servicios || []).length}","${det}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "Historial_Servicios.csv"; a.click();
+    }
+
+    function filtrarHistorial() {
+        const filter = document.getElementById("buscadorHistorial").value.toUpperCase();
+        const rows = document.querySelectorAll("#tabla-historial-body tr");
+        rows.forEach(row => {
+            const td = row.getElementsByTagName("td")[1];
+            if (td) row.style.display = (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1 ? "" : "none";
+        });
+    }
+
+    function volverUI() {
+        if (!modoSoloLectura) {
+            document.getElementById('ui-container').style.display = 'block';
+            document.getElementById('print-container').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+    }
+
+    // Exponer globalmente
+    window.aplicarPaquete = aplicarPaquete;
+    window.limpiarFormularioCompleto = limpiarFormularioCompleto;
+    window.cambiarPestana = cambiarPestana;
+    window.toggleHojas = toggleHojas;
+    window.generarHoja = generarHoja;
+    window.volverUI = volverUI;
+    window.cargarHojaDesdeFirebase = cargarHojaDesdeFirebase;
+    window.borrarRegistro = borrarRegistro;
+    window.descargarExcel = descargarExcel;
+    window.filtrarHistorial = filtrarHistorial;
+
+    // Inicio
+    window.onload = async function() {
+        restaurarFecha();
+        cargarCheckboxes();
+
+        const verId = params.get('ver');
+        const unidadParam = params.get('unidad');
+        const auto = params.get('auto');
+
+        if (verId) {
+            await cargarHojaDesdeFirebase(verId);
+        } else if (unidadParam) {
+            document.getElementById('inputEco').value = unidadParam.toUpperCase();
+            document.getElementById('inputBase').value = (params.get('ruta') || '').toUpperCase();
+            document.getElementById('inputKm').value = params.get('km') || '';
+            document.getElementById('inputComentarios').value = (params.get('comentarios') || '').toUpperCase();
+            document.getElementById('inputObsEsteticas').value = (params.get('obsest') || '').toUpperCase();
+            window.obsEsteticas = params.get('obsest') || '';
+            window.urlFotoFrontal = params.get('f_frontal') || '';
+            window.urlFotoTrasera = params.get('f_trasera') || '';
+            window.urlFotoDerecha = params.get('f_derecha') || '';
+            window.urlFotoIzquierda = params.get('f_izquierda') || '';
+            window.filaExcelOrigen = params.get('fila');
+            window.hojaExcelOrigen = params.get('hoja');
+
+            await cargarYSincronizarProgramado(unidadParam);
+
+            if (auto === '1') {
+                // Flujo automático: guardar y mostrar
+                await generarHojaAutomatica();
+            }
         }
 
-        window.volverUI = function() {
-            if(!modoSoloLectura) {
-                document.getElementById('ui-container').style.display = 'block';
-                document.getElementById('print-container').style.display = 'none';
-                window.scrollTo(0, 0);
-            }
-        };
-
-        window.cargarHojaDesdeFirebase = async function(docId) {
-            try {
-                const docSnap = await getDoc(doc(db, "servicios", docId));
-                if (docSnap.exists()) {
-                    const datos = docSnap.data();
-                    modoSoloLectura = true;
-
-                    document.getElementById('inputEco').value = datos.economico || '';
-                    document.getElementById('inputBase').value = datos.base || '';
-                    document.getElementById('inputKm').value = datos.kilometraje || '';
-                    document.getElementById('inputMecanico').value = datos.mecanico || '';
-                    document.getElementById('inputComentarios').value = datos.comentarios || '';
-                    document.getElementById('inputObsEsteticas').value = datos.obsEsteticas || '';
-                    
-                    if(datos.fecha) {
-                        const partes = datos.fecha.split('/');
-                        if(partes.length === 3) document.getElementById('inputFecha').value = `${partes[2]}-${partes[1]}-${partes[0]}`;
-                    }
-
-                    window.urlFotoFrontal = (datos.fotos && datos.fotos.frontal) ? datos.fotos.frontal : '';
-                    window.urlFotoTrasera = (datos.fotos && datos.fotos.trasera) ? datos.fotos.trasera : '';
-                    window.urlFotoDerecha = (datos.fotos && datos.fotos.derecha) ? datos.fotos.derecha : '';
-                    window.urlFotoIzquierda = (datos.fotos && datos.fotos.izquierda) ? datos.fotos.izquierda : '';
-                    window.obsEsteticas = datos.obsEsteticas || '';
-
-                    cargarCheckboxes();
-                    setTimeout(() => {
-                        (datos.servicios || []).forEach(s => {
-                            const idx = listaServicios.indexOf(s);
-                            const chk = document.getElementById(`chk_${idx}`);
-                            if(chk) chk.checked = true;
-                        });
-                        if(datos.grupo === "Correctivo") document.getElementById('selectPaqueteM').value = "Correctivo";
-                        window.generarHoja();
-                        document.getElementById('btn-volver-ui').style.display = 'none';
-                    }, 200);
-                } else {
-                    document.getElementById('print-container').innerHTML = '<div class="text-center p-10 font-bold text-lg text-red-600">Error: El registro no existe.</div>';
-                    document.getElementById('print-container').style.display = 'block';
-                    document.getElementById('ui-container').style.display = 'none';
-                }
-            } catch (error) {
-                console.error("Error obteniendo documento:", error);
-            }
-        };
-
+        // Suscripción al historial
         onSnapshot(query(serviciosRef, orderBy("timestamp", "desc")), (snaps) => {
             const tbody = document.getElementById('tabla-historial-body');
             const msgVacio = document.getElementById('mensaje-vacio');
-            if(!tbody) return; 
-            tbody.innerHTML = ''; historialGlobal = []; 
-            if (snaps.empty) { msgVacio.classList.remove('hidden'); return; }
-            else { msgVacio.classList.add('hidden'); }
-
-            snaps.forEach((documento) => {
-                const reg = documento.data();
-                reg.id = documento.id; historialGlobal.push(reg);
-                let horaStr = reg.timestamp ? new Date(reg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
-                let listaHTML = `<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">`;
-                (reg.servicios || []).forEach(s => { listaHTML += `<li class="truncate" title="${s}">${s}</li>`; });
-                listaHTML += `</ul>`;
-                let notaComentarios = (reg.comentarios && reg.comentarios.trim() !== '') ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
-
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            historialGlobal = [];
+            if (snaps.empty) {
+                msgVacio.classList.remove('hidden');
+                return;
+            }
+            msgVacio.classList.add('hidden');
+            snaps.forEach(docSnap => {
+                const reg = docSnap.data();
+                reg.id = docSnap.id;
+                historialGlobal.push(reg);
+                const horaStr = reg.timestamp ? new Date(reg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "N/A";
+                let listaHTML = '<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">';
+                (reg.servicios || []).forEach(s => listaHTML += `<li class="truncate" title="${s}">${s}</li>`);
+                listaHTML += '</ul>';
+                let notaComentarios = (reg.comentarios && reg.comentarios.trim()) ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
                 const badgeEstatus = reg.estatus === "PROGRAMADO" ? 
-                    `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded border border-amber-200">⏳ Programado</span>` : 
-                    `<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded border border-green-200">✅ Completado</span>`;
-
+                    '<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded border border-amber-200">⏳ Programado</span>' : 
+                    '<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded border border-green-200">✅ Completado</span>';
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition-colors fila-historial";
+                tr.className = "hover:bg-slate-50 transition-colors";
                 tr.innerHTML = `
                     <td class="px-4 py-4 whitespace-nowrap align-top"><div>${reg.fecha || '-'}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${horaStr}</div></td>
                     <td class="px-4 py-4 font-bold text-slate-900 align-top">${reg.economico || '-'}</td>
@@ -662,104 +752,13 @@
                     <td class="px-4 py-4 align-top"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded border border-indigo-200">${reg.grupo || "Personalizado"}</span> ${badgeEstatus} <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">${(reg.servicios || []).length} marcados</span></div>${listaHTML}${notaComentarios}</td>
                     <td class="px-4 py-4 text-right align-top">
                         <button onclick="window.open('?ver=${reg.id}', '_blank')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors mb-2 block w-full text-center">Ver Hoja</button>
-                        <button onclick="borrarRegistro('${reg.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors block w-full text-center">Borrar</button>
+                        <button onclick="window.borrarRegistro('${reg.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors block w-full text-center">Borrar</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         });
-
-        window.borrarRegistro = async function(id) {
-            if(confirm("¿Estás seguro de borrar este registro?")) { try { await deleteDoc(doc(db, "servicios", id)); } catch (e) { console.error(e); } }
-        };
-
-        window.descargarExcel = function() {
-            if(historialGlobal.length === 0) { alert("No hay registros."); return; }
-            let csvContent = '\uFEFF' + "FECHA,ESTATUS,ECONOMICO,BASE,KILOMETRAJE,MECANICO,GRUPO,COMENTARIOS,OBS_ESTETICAS,CANTIDAD,MANTENIMIENTOS\n";
-            historialGlobal.forEach(reg => {
-                let det = (reg.servicios || []).join(" / ").replace(/"/g, '""');
-                csvContent += `"${reg.fecha || ''}","${reg.estatus || 'COMPLETADO'}","${reg.economico}","${reg.base}","${reg.kilometraje}","${reg.mecanico}","${reg.grupo}","${reg.comentarios || ''}","${reg.obsEsteticas || ''}","${(reg.servicios || []).length}","${det}"\n`;
-            });
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a"); a.href = url; a.download = "Historial_Servicios.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        };
-
-        window.filtrarHistorial = function() {
-            const filter = document.getElementById("buscadorHistorial").value.toUpperCase();
-            const tr = document.getElementById("tabla-historial-body").getElementsByTagName("tr");
-            for (let i = 0; i < tr.length; i++) {
-                let td = tr[i].getElementsByTagName("td")[1];
-                if (td) { tr[i].style.display = (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1 ? "" : "none"; }       
-            }
-        };
-
-        window.onload = async function() {
-            restaurarFecha();
-            cargarCheckboxes();
-            
-            const verId = params.get('ver');
-            if(verId) {
-                window.cargarHojaDesdeFirebase(verId);
-            } else if(params.get('unidad')) {
-                const uParam = params.get('unidad');
-                
-                let serviciosPreprogramados = [];
-                let grupoPreprogramado = "";
-                window.idDocFused = null;
-
-                try {
-                    // 1. CONSULTA SEGURO: Buscamos únicamente por número económico para saltarnos el error de índices de Firebase
-                    const q = query(serviciosRef, where("economico", "==", uParam));
-                    const querySnapshot = await getDocs(q);
-                    
-                    if (!querySnapshot.empty) {
-                        // 2. FILTRADO EN MEMORIA: Nos quedamos solo con los borradores PROGRAMADOS
-                        const programados = querySnapshot.docs
-                            .map(doc => ({ id: doc.id, ...doc.data() }))
-                            .filter(item => item.estatus === "PROGRAMADO");
-                        
-                        if (programados.length > 0) {
-                            // 3. ORDENAMIENTO EN MEMORIA: Ordenamos por fecha de mayor a menor
-                            programados.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                            
-                            const docProg = programados[0];
-                            window.idDocFused = docProg.id;
-                            serviciosPreprogramados = docProg.servicios || [];
-                            grupoPreprogramado = docProg.grupo || "";
-                        }
-                    }
-                } catch(err) {
-                    console.error("Error al buscar hojas programadas: ", err);
-                }
-
-                // DATOS EN VIVO DE LUIS: Tienen prioridad absoluta para KM, Ruta y Comentarios según tu instrucción
-                document.getElementById('inputEco').value = uParam;
-                document.getElementById('inputBase').value = params.get('ruta') || "";
-                document.getElementById('inputKm').value = params.get('km') || "";
-                document.getElementById('inputComentarios').value = params.get('comentarios') || "";
-                document.getElementById('inputObsEsteticas').value = params.get('obsest') || "";
-                document.getElementById('inputMecanico').value = ""; // Candado limpio para Luis
-                window.obsEsteticas = params.get('obsest') || "";
-
-                if(window.idDocFused) {
-                    // 🛡️ MODO ESCUDO ACTIVADO: Como hay borrador de oficina, inyectamos tus palomitas exactas e ignoramos el manto de Luis
-                    if(grupoPreprogramado) {
-                        document.getElementById('selectPaqueteM').value = grupoPreprogramado;
-                    }
-                    listaServicios.forEach((servicio, index) => {
-                        const chk = document.getElementById(`chk_${index}`);
-                        if(chk) chk.checked = serviciosPreprogramados.includes(servicio);
-                    });
-                } else {
-                    // Flujo tradicional: Si no creaste borrador, se activa el paquete que Luis mandó de patio
-                    if(params.get('manto')) {
-                        document.getElementById('selectPaqueteM').value = params.get('manto');
-                        aplicarPaquete();
-                    }
-                }
-            }
-        };
-    </script>
+    };
+</script>
 </body>
 </html>
