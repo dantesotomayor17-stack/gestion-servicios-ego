@@ -53,7 +53,7 @@
         .fr-firmas { display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
         .fr-firma-box { width: 45%; }
 
-        /* ESTILOS NUEVOS PARA LA CUADRÍCULA DE FOTOS */
+        /* ESTILOS PARA LA CUADRÍCULA DE FOTOS */
         .grid-fotos-reales { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin: 0 auto; }
         .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; }
         .foto-header-title { font-size: 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 4px; padding-bottom: 1px; background-color: #f3f4f6; }
@@ -309,7 +309,7 @@
         window.obsEsteticas = params.get('obsest') || "";
         window.filaExcelOrigen = params.get('fila');
         window.hojaExcelOrigen = params.get('hoja');
-        window.idDocFused = null; // Guardará el ID del borrador a fusionar
+        window.idDocFused = null;
 
         const listaServicios = [
             "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
@@ -706,52 +706,56 @@
                 
                 let serviciosPreprogramados = [];
                 let grupoPreprogramado = "";
-                let comentariosPreprogramados = "";
                 window.idDocFused = null;
 
                 try {
-                    // Buscamos si existe un borrador PROGRAMADO en Firebase para esta unidad específica
-                    const q = query(serviciosRef, where("economico", "==", uParam), where("estatus", "==", "PROGRAMADO"), orderBy("timestamp", "desc"), limit(1));
+                    // 1. CONSULTA SEGURO: Buscamos únicamente por número económico para saltarnos el error de índices de Firebase
+                    const q = query(serviciosRef, where("economico", "==", uParam));
                     const querySnapshot = await getDocs(q);
                     
                     if (!querySnapshot.empty) {
-                        const docProg = querySnapshot.docs[0];
-                        window.idDocFused = docProg.id;
-                        serviciosPreprogramados = docProg.data().servicios || [];
-                        grupoPreprogramado = docProg.data().grupo || "";
-                        comentariosPreprogramados = docProg.data().comentarios || "";
+                        // 2. FILTRADO EN MEMORIA: Nos quedamos solo con los borradores PROGRAMADOS
+                        const programados = querySnapshot.docs
+                            .map(doc => ({ id: doc.id, ...doc.data() }))
+                            .filter(item => item.estatus === "PROGRAMADO");
+                        
+                        if (programados.length > 0) {
+                            // 3. ORDENAMIENTO EN MEMORIA: Ordenamos por fecha de mayor a menor
+                            programados.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            
+                            const docProg = programados[0];
+                            window.idDocFused = docProg.id;
+                            serviciosPreprogramados = docProg.servicios || [];
+                            grupoPreprogramado = docProg.grupo || "";
+                        }
                     }
                 } catch(err) {
-                    console.error("Error buscando pre-programacion: ", err);
+                    console.error("Error al buscar hojas programadas: ", err);
                 }
 
-                // Inyectamos los datos en vivo reales capturados por Luis en el patio
+                // DATOS EN VIVO DE LUIS: Tienen prioridad absoluta para KM, Ruta y Comentarios según tu instrucción
                 document.getElementById('inputEco').value = uParam;
                 document.getElementById('inputBase').value = params.get('ruta') || "";
                 document.getElementById('inputKm').value = params.get('km') || "";
+                document.getElementById('inputComentarios').value = params.get('comentarios') || "";
                 document.getElementById('inputObsEsteticas').value = params.get('obsest') || "";
-                document.getElementById('inputMecanico').value = ""; // Obligatorio vaciarlo para captura de Luis
+                document.getElementById('inputMecanico').value = ""; // Candado limpio para Luis
                 window.obsEsteticas = params.get('obsest') || "";
 
-                // Prioridad para comentarios: si tú ya escribiste algo en la oficina, dejamos el tuyo. Si no, lo que ponga Luis.
-                document.getElementById('inputComentarios').value = comentariosPreprogramados || params.get('comentarios') || "";
-
                 if(window.idDocFused) {
-                    // 🛡️ MODO ESCUDO ACTIVADO: Como hay pre-programación, ignoramos el select de Luis para no borrar tus palomitas
+                    // 🛡️ MODO ESCUDO ACTIVADO: Como hay borrador de oficina, inyectamos tus palomitas exactas e ignoramos el manto de Luis
                     if(grupoPreprogramado) {
                         document.getElementById('selectPaqueteM').value = grupoPreprogramado;
                     }
-                    setTimeout(() => {
-                        listaServicios.forEach((servicio, index) => {
-                            const chk = document.getElementById(`chk_${index}`);
-                            if(chk) chk.checked = serviciosPreprogramados.includes(servicio);
-                        });
-                    }, 300);
+                    listaServicios.forEach((servicio, index) => {
+                        const chk = document.getElementById(`chk_${index}`);
+                        if(chk) chk.checked = serviciosPreprogramados.includes(servicio);
+                    });
                 } else {
-                    // Flujo normal sin pre-programación: aplicamos el paquete que mande Luis
+                    // Flujo tradicional: Si no creaste borrador, se activa el paquete que Luis mandó de patio
                     if(params.get('manto')) {
                         document.getElementById('selectPaqueteM').value = params.get('manto');
-                        setTimeout(() => aplicarPaquete(), 300);
+                        aplicarPaquete();
                     }
                 }
             }
