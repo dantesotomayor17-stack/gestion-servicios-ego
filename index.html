@@ -60,7 +60,6 @@
         .foto-img-element { height: 135px; width: 100%; object-fit: contain; margin: 0 auto; display: block; }
 
         .hidden-hoja { display: none !important; }
-        .campo-error { border-color: #ef4444 !important; outline: none; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
@@ -84,19 +83,18 @@
             </div>
 
             <div class="flex border-b border-slate-200 bg-slate-50 px-6">
-                <button onclick="window.cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">Nuevo Servicio</button>
-                <button onclick="window.cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors">Historial de Registros</button>
+                <button onclick="cambiarPestana('nuevo')" id="tab-btn-nuevo" class="py-3 px-4 border-b-2 border-blue-600 text-blue-700 font-bold focus:outline-none transition-colors">Nuevo Servicio</button>
+                <button onclick="cambiarPestana('historial')" id="tab-btn-historial" class="py-3 px-4 text-slate-500 hover:text-blue-600 font-bold focus:outline-none transition-colors">Historial de Registros</button>
             </div>
 
             <div id="vista-nuevo">
-                <!-- Se restaura el onsubmit nativo para evitar bloqueos del navegador -->
-                <form id="serviceForm" class="p-6" onsubmit="window.generarHoja(event)">
+                <form id="serviceForm" class="p-6" onsubmit="generarHoja(event)">
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label><input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. ECO-01"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label><input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. BASE NORTE"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">KILOMETRAJE</label><input type="number" id="inputKm" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 transition-colors" placeholder="Ej. 120000"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1 text-slate-700">MECÁNICO</label><input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. LUIS"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label><input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors"></div>
+                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label><input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. ECO-01"></div>
+                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label><input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. BASE NORTE"></div>
+                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">KILOMETRAJE</label><input type="number" id="inputKm" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500" placeholder="Ej. 120000"></div>
+                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">MECÁNICO</label><input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase" placeholder="Ej. LUIS"></div>
+                        <div><label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label><input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase"></div>
                     </div>
 
                     <div class="mb-6 border-b border-slate-200 pb-4">
@@ -112,7 +110,7 @@
                             </div>
                             <div class="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200 shadow-sm w-full">
                                 <label for="selectPaqueteM" class="text-sm font-bold text-blue-900 whitespace-nowrap">Grupo de Mtto:</label>
-                                <select id="selectPaqueteM" onchange="window.aplicarPaquete()" class="w-full px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
+                                <select id="selectPaqueteM" onchange="aplicarPaquete()" class="w-full px-2 py-1 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 cursor-pointer outline-none">
                                     <option value="">- Seleccionar (Manual) -</option>
                                     <option value="Correctivo">Correctivo</option>
                                     <option value="M1">Grupo M1</option>
@@ -129,7 +127,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container"></div>
 
                     <div class="flex justify-end gap-4 border-t pt-6">
-                        <button type="button" onclick="window.limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
+                        <button type="button" onclick="limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
                         <button type="submit" class="py-2 px-8 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">Generar y Guardar</button>
                     </div>
                 </form>
@@ -139,8 +137,8 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                     <h2 class="text-xl font-bold text-slate-800">Servicios Registrados</h2>
                     <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <input type="text" id="buscadorHistorial" onkeyup="window.filtrarHistorial()" placeholder="Buscar Económico..." class="block w-full pl-3 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition-shadow">
-                        <button onclick="window.descargarExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow flex items-center gap-2 transition-colors text-sm whitespace-nowrap">Descargar Excel</button>
+                        <input type="text" id="buscadorHistorial" onkeyup="filtrarHistorial()" placeholder="Buscar Económico..." class="block w-full pl-3 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition-shadow">
+                        <button onclick="descargarExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow flex items-center gap-2 transition-colors text-sm whitespace-nowrap">Descargar Excel</button>
                     </div>
                 </div>
                 <div class="overflow-x-auto rounded-lg border border-slate-200">
@@ -164,11 +162,11 @@
 
     <div id="print-container">
         <div id="botones-impresion" class="no-print bg-slate-800 p-4 flex flex-col md:flex-row justify-between items-center shadow-md mb-4 sticky top-0 z-50">
-            <button id="btn-volver-ui" onclick="window.volverUI()" class="px-4 py-2 bg-slate-600 text-white rounded font-bold hover:bg-slate-500 transition-colors text-sm mb-2 md:mb-0">⬅️ Volver al Inicio</button>
+            <button id="btn-volver-ui" onclick="volverUI()" class="px-4 py-2 bg-slate-600 text-white rounded font-bold hover:bg-slate-500 transition-colors text-sm mb-2 md:mb-0">⬅️ Volver al Inicio</button>
             <div class="flex gap-2 bg-slate-900 p-1 rounded-lg border border-slate-700">
-                <button onclick="window.toggleHojas('servicio')" id="btn-tg-servicio" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">1. Ver Servicio</button>
-                <button onclick="window.toggleHojas('recepcion')" id="btn-tg-recepcion" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">2. Ver Recepción</button>
-                <button onclick="window.toggleHojas('ambas')" id="btn-tg-ambas" class="px-3 py-1.5 rounded text-sm font-bold bg-blue-600 text-white shadow">Ambas Hojas</button>
+                <button onclick="toggleHojas('servicio')" id="btn-tg-servicio" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">1. Ver Servicio</button>
+                <button onclick="toggleHojas('recepcion')" id="btn-tg-recepcion" class="px-3 py-1.5 rounded text-sm font-bold text-slate-300 hover:text-white transition-colors">2. Ver Recepción</button>
+                <button onclick="toggleHojas('ambas')" id="btn-tg-ambas" class="px-3 py-1.5 rounded text-sm font-bold bg-blue-600 text-white shadow">Ambas Hojas</button>
             </div>
             <button onclick="window.print()" class="px-6 py-2 bg-green-500 text-white rounded font-black hover:bg-green-600 shadow-md transition-colors text-lg flex items-center gap-2 mt-2 md:mt-0">IMPRIMIR AHORA</button>
         </div>
@@ -283,7 +281,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDoc, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, deleteDoc, doc, getDoc, where, limit, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDLywqH8iBbnlSwwRFhWVbZ4mjEkz6Xs_8", 
@@ -297,11 +295,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const serviciosRef = collection(db, "servicios");
+
         const URL_WEBAPP = "https://script.google.com/macros/s/AKfycbzSYGJNO-VSxYa8v0EGYYJVsJy5RPw1rkurLX-jDcFux4WTNBr6JHanINJbSeHkeAlRMw/exec";
 
         let historialGlobal = [];
         let modoSoloLectura = false;
-        
+
         const params = new URLSearchParams(window.location.search);
         window.urlFotoFrontal = params.get('f_frontal') || "";
         window.urlFotoTrasera = params.get('f_trasera') || "";
@@ -335,7 +334,7 @@
             "M6": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "CAMBIO DE FILTRO HIDRAULICO"]
         };
 
-        function aplicarPaquete() {
+        window.aplicarPaquete = function() {
             const paqueteSeleccionado = document.getElementById('selectPaqueteM').value;
             listaServicios.forEach((_, index) => {
                 const chk = document.getElementById(`chk_${index}`);
@@ -348,15 +347,14 @@
                     if(idx !== -1 && chk) chk.checked = true; 
                 });
             }
-        }
+        };
 
-        function limpiarFormularioCompleto() {
+        window.limpiarFormularioCompleto = function() {
             document.getElementById('serviceForm').reset();
             document.getElementById('selectPaqueteM').value = ""; 
-            document.getElementById('inputMecanico').classList.remove('campo-error'); 
             restaurarFecha();
             window.idDocFused = null;
-        }
+        };
 
         function restaurarFecha() {
             const tzoffset = (new Date()).getTimezoneOffset() * 60000;
@@ -379,7 +377,7 @@
             });
         }
 
-        function cambiarPestana(pestana) {
+        window.cambiarPestana = function(pestana) {
             const vNuevo = document.getElementById('vista-nuevo');
             const vHistorial = document.getElementById('vista-historial');
             const btnNuevo = document.getElementById('tab-btn-nuevo');
@@ -394,62 +392,39 @@
                 btnHistorial.classList.add('border-b-2', 'border-blue-600', 'text-blue-700'); btnHistorial.classList.remove('text-slate-500');
                 btnNuevo.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700'); btnNuevo.classList.add('text-slate-500');
             }
-        }
+        };
 
-        function toggleHojas(vista) {
+        window.toggleHojas = function(vista) {
             const hojaS = document.getElementById('hoja-servicio-container');
             const hojaR = document.getElementById('hoja-recepcion-container');
             const btnS = document.getElementById('btn-tg-servicio');
             const btnR = document.getElementById('btn-tg-recepcion');
             const btnA = document.getElementById('btn-tg-ambas');
 
-            [btnS, btnR, btnA].forEach(b => { 
-                if (b) {
-                    b.classList.remove('bg-blue-600', 'text-white', 'shadow'); 
-                    b.classList.add('text-slate-300'); 
-                }
-            });
+            [btnS, btnR, btnA].forEach(b => { b.classList.remove('bg-blue-600', 'text-white', 'shadow'); b.classList.add('text-slate-300'); });
 
             if (vista === 'servicio') {
                 hojaS.classList.remove('hidden-hoja'); hojaR.classList.add('hidden-hoja');
-                if (btnS) { btnS.classList.add('bg-blue-600', 'text-white', 'shadow'); btnS.classList.remove('text-slate-300'); }
+                btnS.classList.add('bg-blue-600', 'text-white', 'shadow'); btnS.classList.remove('text-slate-300');
             } else if (vista === 'recepcion') {
                 hojaS.classList.add('hidden-hoja'); hojaR.classList.remove('hidden-hoja');
-                if (btnR) { btnR.classList.add('bg-blue-600', 'text-white', 'shadow'); btnR.classList.remove('text-slate-300'); }
+                btnR.classList.add('bg-blue-600', 'text-white', 'shadow'); btnR.classList.remove('text-slate-300');
             } else {
                 hojaS.classList.remove('hidden-hoja'); hojaR.classList.remove('hidden-hoja');
-                if (btnA) { btnA.classList.add('bg-blue-600', 'text-white', 'shadow'); btnA.classList.remove('text-slate-300'); }
+                btnA.classList.add('bg-blue-600', 'text-white', 'shadow'); btnA.classList.remove('text-slate-300');
             }
-        }
+        };
 
-        function generarHoja(e) {
+        window.generarHoja = function(e) {
             if(e) e.preventDefault();
 
             const economico = document.getElementById('inputEco').value.toUpperCase();
-            if (!economico) {
-                alert("⚠️ Error: Es obligatorio ingresar el número ECONÓMICO.");
-                return;
-            }
-
-            const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
-            const esProgramacionOficina = !params.has('unidad');
-
-            // Solo bloqueamos a Luis en el patio si se le olvida poner quién es el mecánico
-            const mecInput = document.getElementById('inputMecanico');
-            if (!esProgramacionOficina && !mecanico) {
-                alert("⚠️ ALTO: Luis, es obligatorio que escribas el nombre del MECÁNICO antes de generar la hoja.");
-                mecInput.classList.add('campo-error');
-                mecInput.focus();
-                return;
-            } else {
-                mecInput.classList.remove('campo-error');
-            }
-
             const base = document.getElementById('inputBase').value.toUpperCase();
             const kilometraje = document.getElementById('inputKm').value;
+            const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
             const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
             const textoObsEsteticas = document.getElementById('inputObsEsteticas').value.toUpperCase();
-
+            
             if (textoObsEsteticas.trim() !== "") { window.obsEsteticas = textoObsEsteticas; }
 
             const selectElement = document.getElementById('selectPaqueteM');
@@ -551,7 +526,7 @@
                 }
             }
 
-            if(!modoSoloLectura) {
+            if(!modoSoloLectura && (serviciosMarcados.length > 0 || valorGrupo === "Correctivo")) {
                 guardarEnFirebase({ 
                     fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
                     mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
@@ -565,7 +540,7 @@
 
             if(document.getElementById('btn-volver-ui')) document.getElementById('btn-volver-ui').style.display = 'inline-block';
             window.scrollTo(0, 0); 
-        }
+        };
 
         async function guardarEnFirebase(registro) {
             try {
@@ -603,15 +578,15 @@
             } catch (e) { console.error("Error al guardar: ", e); }
         }
 
-        function volverUI() {
+        window.volverUI = function() {
             if(!modoSoloLectura) {
                 document.getElementById('ui-container').style.display = 'block';
                 document.getElementById('print-container').style.display = 'none';
                 window.scrollTo(0, 0);
             }
-        }
+        };
 
-        async function cargarHojaDesdeFirebase(docId) {
+        window.cargarHojaDesdeFirebase = async function(docId) {
             try {
                 const docSnap = await getDoc(doc(db, "servicios", docId));
                 if (docSnap.exists()) {
@@ -644,7 +619,7 @@
                             if(chk) chk.checked = true;
                         });
                         if(datos.grupo === "Correctivo") document.getElementById('selectPaqueteM').value = "Correctivo";
-                        generarHoja(new Event('submit'));
+                        window.generarHoja();
                         document.getElementById('btn-volver-ui').style.display = 'none';
                     }, 200);
                 } else {
@@ -655,13 +630,50 @@
             } catch (error) {
                 console.error("Error obteniendo documento:", error);
             }
-        }
+        };
 
-        async function borrarRegistro(id) {
+        onSnapshot(query(serviciosRef, orderBy("timestamp", "desc")), (snaps) => {
+            const tbody = document.getElementById('tabla-historial-body');
+            const msgVacio = document.getElementById('mensaje-vacio');
+            if(!tbody) return; 
+            tbody.innerHTML = ''; historialGlobal = []; 
+            if (snaps.empty) { msgVacio.classList.remove('hidden'); return; }
+            else { msgVacio.classList.add('hidden'); }
+
+            snaps.forEach((documento) => {
+                const reg = documento.data();
+                reg.id = documento.id; historialGlobal.push(reg);
+                let horaStr = reg.timestamp ? new Date(reg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
+                let listaHTML = `<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">`;
+                (reg.servicios || []).forEach(s => { listaHTML += `<li class="truncate" title="${s}">${s}</li>`; });
+                listaHTML += `</ul>`;
+                let notaComentarios = (reg.comentarios && reg.comentarios.trim() !== '') ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
+
+                const badgeEstatus = reg.estatus === "PROGRAMADO" ? 
+                    `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded border border-amber-200">⏳ Programado</span>` : 
+                    `<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded border border-green-200">✅ Completado</span>`;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors fila-historial";
+                tr.innerHTML = `
+                    <td class="px-4 py-4 whitespace-nowrap align-top"><div>${reg.fecha || '-'}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${horaStr}</div></td>
+                    <td class="px-4 py-4 font-bold text-slate-900 align-top">${reg.economico || '-'}</td>
+                    <td class="px-4 py-4 text-slate-700 align-top"><span class="block">${reg.base || '-'}</span><span class="block text-xs text-slate-500 mt-1"><i class="font-semibold">Km:</i> ${reg.kilometraje ? new Intl.NumberFormat('es-MX').format(reg.kilometraje) : 'N/A'}</span><span class="block text-xs text-slate-500"><i class="font-semibold">Mec:</i> ${reg.mecanico || 'N/A'}</span></td>
+                    <td class="px-4 py-4 align-top"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded border border-indigo-200">${reg.grupo || "Personalizado"}</span> ${badgeEstatus} <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">${(reg.servicios || []).length} marcados</span></div>${listaHTML}${notaComentarios}</td>
+                    <td class="px-4 py-4 text-right align-top">
+                        <button onclick="window.open('?ver=${reg.id}', '_blank')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors mb-2 block w-full text-center">Ver Hoja</button>
+                        <button onclick="borrarRegistro('${reg.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors block w-full text-center">Borrar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        });
+
+        window.borrarRegistro = async function(id) {
             if(confirm("¿Estás seguro de borrar este registro?")) { try { await deleteDoc(doc(db, "servicios", id)); } catch (e) { console.error(e); } }
-        }
+        };
 
-        function descargarExcel() {
+        window.descargarExcel = function() {
             if(historialGlobal.length === 0) { alert("No hay registros."); return; }
             let csvContent = '\uFEFF' + "FECHA,ESTATUS,ECONOMICO,BASE,KILOMETRAJE,MECANICO,GRUPO,COMENTARIOS,OBS_ESTETICAS,CANTIDAD,MANTENIMIENTOS\n";
             historialGlobal.forEach(reg => {
@@ -671,28 +683,16 @@
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a"); a.href = url; a.download = "Historial_Servicios.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        }
+        };
 
-        function filtrarHistorial() {
+        window.filtrarHistorial = function() {
             const filter = document.getElementById("buscadorHistorial").value.toUpperCase();
             const tr = document.getElementById("tabla-historial-body").getElementsByTagName("tr");
             for (let i = 0; i < tr.length; i++) {
                 let td = tr[i].getElementsByTagName("td")[1];
                 if (td) { tr[i].style.display = (td.textContent || td.innerText).toUpperCase().indexOf(filter) > -1 ? "" : "none"; }       
             }
-        }
-
-        // Inyección a la memoria global
-        window.aplicarPaquete = aplicarPaquete;
-        window.limpiarFormularioCompleto = limpiarFormularioCompleto;
-        window.cambiarPestana = cambiarPestana;
-        window.toggleHojas = toggleHojas;
-        window.generarHoja = generarHoja;
-        window.volverUI = volverUI;
-        window.cargarHojaDesdeFirebase = cargarHojaDesdeFirebase;
-        window.borrarRegistro = borrarRegistro;
-        window.descargarExcel = descargarExcel;
-        window.filtrarHistorial = filtrarHistorial;
+        };
 
         window.onload = async function() {
             restaurarFecha();
@@ -700,103 +700,65 @@
             
             const verId = params.get('ver');
             if(verId) {
-                cargarHojaDesdeFirebase(verId);
+                window.cargarHojaDesdeFirebase(verId);
             } else if(params.get('unidad')) {
                 const uParam = params.get('unidad');
                 
                 let serviciosPreprogramados = [];
                 let grupoPreprogramado = "";
-                let comentariosPreprogramados = ""; 
                 window.idDocFused = null;
 
                 try {
+                    // 1. CONSULTA SEGURO: Buscamos únicamente por número económico para saltarnos el error de índices de Firebase
                     const q = query(serviciosRef, where("economico", "==", uParam));
                     const querySnapshot = await getDocs(q);
                     
                     if (!querySnapshot.empty) {
+                        // 2. FILTRADO EN MEMORIA: Nos quedamos solo con los borradores PROGRAMADOS
                         const programados = querySnapshot.docs
                             .map(doc => ({ id: doc.id, ...doc.data() }))
                             .filter(item => item.estatus === "PROGRAMADO");
                         
                         if (programados.length > 0) {
+                            // 3. ORDENAMIENTO EN MEMORIA: Ordenamos por fecha de mayor a menor
                             programados.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                             
                             const docProg = programados[0];
                             window.idDocFused = docProg.id;
                             serviciosPreprogramados = docProg.servicios || [];
                             grupoPreprogramado = docProg.grupo || "";
-                            comentariosPreprogramados = docProg.comentarios || ""; 
                         }
                     }
                 } catch(err) {
                     console.error("Error al buscar hojas programadas: ", err);
                 }
 
+                // DATOS EN VIVO DE LUIS: Tienen prioridad absoluta para KM, Ruta y Comentarios según tu instrucción
                 document.getElementById('inputEco').value = uParam;
                 document.getElementById('inputBase').value = params.get('ruta') || "";
                 document.getElementById('inputKm').value = params.get('km') || "";
+                document.getElementById('inputComentarios').value = params.get('comentarios') || "";
                 document.getElementById('inputObsEsteticas').value = params.get('obsest') || "";
-                
-                document.getElementById('inputMecanico').value = ""; 
+                document.getElementById('inputMecanico').value = ""; // Candado limpio para Luis
                 window.obsEsteticas = params.get('obsest') || "";
 
-                let comentarioLuis = params.get('comentarios') || "";
-                document.getElementById('inputComentarios').value = comentarioLuis ? comentarioLuis : comentariosPreprogramados;
-
                 if(window.idDocFused) {
+                    // 🛡️ MODO ESCUDO ACTIVADO: Como hay borrador de oficina, inyectamos tus palomitas exactas e ignoramos el manto de Luis
                     if(grupoPreprogramado) {
                         document.getElementById('selectPaqueteM').value = grupoPreprogramado;
                     }
-                    setTimeout(() => {
-                        listaServicios.forEach((servicio, index) => {
-                            const chk = document.getElementById(`chk_${index}`);
-                            if(chk) chk.checked = serviciosPreprogramados.includes(servicio);
-                        });
-                    }, 300);
+                    listaServicios.forEach((servicio, index) => {
+                        const chk = document.getElementById(`chk_${index}`);
+                        if(chk) chk.checked = serviciosPreprogramados.includes(servicio);
+                    });
                 } else {
+                    // Flujo tradicional: Si no creaste borrador, se activa el paquete que Luis mandó de patio
                     if(params.get('manto')) {
                         document.getElementById('selectPaqueteM').value = params.get('manto');
                         aplicarPaquete();
                     }
                 }
             }
-
-            onSnapshot(query(serviciosRef, orderBy("timestamp", "desc")), (snaps) => {
-                const tbody = document.getElementById('tabla-historial-body');
-                const msgVacio = document.getElementById('mensaje-vacio');
-                if(!tbody) return; 
-                tbody.innerHTML = ''; historialGlobal = []; 
-                if (snaps.empty) { msgVacio.classList.remove('hidden'); return; }
-                else { msgVacio.classList.add('hidden'); }
-
-                snaps.forEach((documento) => {
-                    const reg = documento.data();
-                    reg.id = documento.id; historialGlobal.push(reg);
-                    let horaStr = reg.timestamp ? new Date(reg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
-                    let listaHTML = `<ul class="list-disc list-inside mt-2 text-xs text-slate-600 max-h-32 overflow-y-auto pr-2">`;
-                    (reg.servicios || []).forEach(s => { listaHTML += `<li class="truncate" title="${s}">${s}</li>`; });
-                    listaHTML += `</ul>`;
-                    let notaComentarios = (reg.comentarios && reg.comentarios.trim() !== '') ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
-
-                    const badgeEstatus = reg.estatus === "PROGRAMADO" ? 
-                        `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded border border-amber-200">⏳ Programado</span>` : 
-                        `<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded border border-green-200">✅ Completado</span>`;
-
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-50 transition-colors fila-historial";
-                    tr.innerHTML = `
-                        <td class="px-4 py-4 whitespace-nowrap align-top"><div>${reg.fecha || '-'}</div><div class="text-xs text-slate-500 mt-1 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${horaStr}</div></td>
-                        <td class="px-4 py-4 font-bold text-slate-900 align-top">${reg.economico || '-'}</td>
-                        <td class="px-4 py-4 text-slate-700 align-top"><span class="block">${reg.base || '-'}</span><span class="block text-xs text-slate-500 mt-1"><i class="font-semibold">Km:</i> ${reg.kilometraje ? new Intl.NumberFormat('es-MX').format(reg.kilometraje) : 'N/A'}</span><span class="block text-xs text-slate-500"><i class="font-semibold">Mec:</i> ${reg.mecanico || 'N/A'}</span></td>
-                        <td class="px-4 py-4 align-top"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded border border-indigo-200">${reg.grupo || "Personalizado"}</span> ${badgeEstatus} <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200">${(reg.servicios || []).length} marcados</span></div>${listaHTML}${notaComentarios}</td>
-                        <td class="px-4 py-4 text-right align-top">
-                            <button onclick="window.open('?ver=${reg.id}', '_blank')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded transition-colors mb-2 block w-full text-center">Ver Hoja</button>
-                            <button onclick="window.borrarRegistro('${reg.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1 rounded transition-colors block w-full text-center">Borrar</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            });
         };
     </script>
 </body>
