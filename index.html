@@ -60,8 +60,6 @@
         .foto-img-element { height: 135px; width: 100%; object-fit: contain; margin: 0 auto; display: block; }
 
         .hidden-hoja { display: none !important; }
-        
-        /* Efecto visual para campos obligatorios vacíos */
         .campo-error { border-color: #ef4444 !important; outline: none; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
     </style>
 </head>
@@ -91,13 +89,13 @@
             </div>
 
             <div id="vista-nuevo">
-                <!-- Quitamos el <form onsubmit> para evitar que el navegador recargue la página en blanco por accidente -->
-                <form id="serviceForm" class="p-6">
+                <!-- Se restaura el onsubmit nativo para evitar bloqueos del navegador -->
+                <form id="serviceForm" class="p-6" onsubmit="window.generarHoja(event)">
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 bg-slate-50 p-4 rounded-lg border border-slate-200">
                         <div><label class="block text-sm font-semibold text-slate-700 mb-1">ECONÓMICO</label><input type="text" id="inputEco" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. ECO-01"></div>
                         <div><label class="block text-sm font-semibold text-slate-700 mb-1">BASE / RUTA</label><input type="text" id="inputBase" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. BASE NORTE"></div>
                         <div><label class="block text-sm font-semibold text-slate-700 mb-1">KILOMETRAJE</label><input type="number" id="inputKm" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 transition-colors" placeholder="Ej. 120000"></div>
-                        <div><label class="block text-sm font-semibold text-slate-700 mb-1 text-red-600">MECÁNICO (Obligatorio)</label><input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. LUIS"></div>
+                        <div><label class="block text-sm font-semibold text-slate-700 mb-1 text-slate-700">MECÁNICO</label><input type="text" id="inputMecanico" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors" placeholder="Ej. LUIS"></div>
                         <div><label class="block text-sm font-semibold text-slate-700 mb-1">FECHA</label><input type="date" id="inputFecha" class="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 uppercase transition-colors"></div>
                     </div>
 
@@ -131,9 +129,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 mb-8" id="checkbox-container"></div>
 
                     <div class="flex justify-end gap-4 border-t pt-6">
-                        <!-- Usamos type="button" para seguridad -->
                         <button type="button" onclick="window.limpiarFormularioCompleto()" class="px-6 py-2 border border-slate-300 rounded text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Limpiar</button>
-                        <button type="button" onclick="window.generarHoja()" class="py-2 px-8 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">Generar y Guardar</button>
+                        <button type="submit" class="py-2 px-8 bg-blue-600 text-white rounded font-bold hover:bg-blue-700 shadow-md flex items-center gap-2 transition-colors">Generar y Guardar</button>
                     </div>
                 </form>
             </div>
@@ -356,7 +353,7 @@
         function limpiarFormularioCompleto() {
             document.getElementById('serviceForm').reset();
             document.getElementById('selectPaqueteM').value = ""; 
-            document.getElementById('inputMecanico').classList.remove('campo-error'); // Limpiamos rojo si había error
+            document.getElementById('inputMecanico').classList.remove('campo-error'); 
             restaurarFecha();
             window.idDocFused = null;
         }
@@ -425,35 +422,34 @@
             }
         }
 
-        function generarHoja() {
-            // Ya no usamos form submission events, solo lógica pura al picar el botón
-            const economico = document.getElementById('inputEco').value.toUpperCase();
-            const base = document.getElementById('inputBase').value.toUpperCase();
-            const kilometraje = document.getElementById('inputKm').value;
-            const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
-            const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
-            const textoObsEsteticas = document.getElementById('inputObsEsteticas').value.toUpperCase();
+        function generarHoja(e) {
+            if(e) e.preventDefault();
 
-            // BLOQUEO DE SEGURIDAD VISUAL: Si falta el nombre del Mecánico, pintamos la caja de rojo y detenemos el proceso
-            let errores = [];
-            if (!economico) errores.push("Económico");
-            if (!base) errores.push("Base / Ruta");
-            if (!kilometraje) errores.push("Kilometraje");
-            
+            const economico = document.getElementById('inputEco').value.toUpperCase();
+            if (!economico) {
+                alert("⚠️ Error: Es obligatorio ingresar el número ECONÓMICO.");
+                return;
+            }
+
+            const mecanico = document.getElementById('inputMecanico').value.toUpperCase();
+            const esProgramacionOficina = !params.has('unidad');
+
+            // Solo bloqueamos a Luis en el patio si se le olvida poner quién es el mecánico
             const mecInput = document.getElementById('inputMecanico');
-            if (!mecanico) {
-                errores.push("MECÁNICO (Obligatorio teclear quién realizará el servicio)");
+            if (!esProgramacionOficina && !mecanico) {
+                alert("⚠️ ALTO: Luis, es obligatorio que escribas el nombre del MECÁNICO antes de generar la hoja.");
                 mecInput.classList.add('campo-error');
+                mecInput.focus();
+                return;
             } else {
                 mecInput.classList.remove('campo-error');
             }
 
-            if (errores.length > 0) {
-                alert("⚠️ ACCIÓN DETENIDA:\n\nTe falta llenar los siguientes campos:\n- " + errores.join("\n- "));
-                if (!mecanico) mecInput.focus();
-                return; // Esto "congela" el botón para que no avance hasta que llenen la caja
-            }
-            
+            const base = document.getElementById('inputBase').value.toUpperCase();
+            const kilometraje = document.getElementById('inputKm').value;
+            const textoComentarios = document.getElementById('inputComentarios').value.toUpperCase();
+            const textoObsEsteticas = document.getElementById('inputObsEsteticas').value.toUpperCase();
+
             if (textoObsEsteticas.trim() !== "") { window.obsEsteticas = textoObsEsteticas; }
 
             const selectElement = document.getElementById('selectPaqueteM');
@@ -648,13 +644,7 @@
                             if(chk) chk.checked = true;
                         });
                         if(datos.grupo === "Correctivo") document.getElementById('selectPaqueteM').value = "Correctivo";
-                        
-                        // Llenar datos de mecanico fantasma para visualización directa
-                        if(!document.getElementById('inputMecanico').value) {
-                             document.getElementById('inputMecanico').value = "NO REGISTRADO";
-                        }
-                        
-                        generarHoja();
+                        generarHoja(new Event('submit'));
                         document.getElementById('btn-volver-ui').style.display = 'none';
                     }, 200);
                 } else {
@@ -692,7 +682,7 @@
             }
         }
 
-        // Inyección a la memoria global para que el HTML reconozca todas las funciones
+        // Inyección a la memoria global
         window.aplicarPaquete = aplicarPaquete;
         window.limpiarFormularioCompleto = limpiarFormularioCompleto;
         window.cambiarPestana = cambiarPestana;
@@ -742,23 +732,18 @@
                     console.error("Error al buscar hojas programadas: ", err);
                 }
 
-                // Lógica de llenado y fusión de datos
                 document.getElementById('inputEco').value = uParam;
                 document.getElementById('inputBase').value = params.get('ruta') || "";
                 document.getElementById('inputKm').value = params.get('km') || "";
                 document.getElementById('inputObsEsteticas').value = params.get('obsest') || "";
                 
-                // Vaciamos el campo del mecánico a propósito para que Luis lo llene. 
-                // Esto es lo que estaba deteniendo el botón antes.
                 document.getElementById('inputMecanico').value = ""; 
                 window.obsEsteticas = params.get('obsest') || "";
 
-                // PRIORIDAD COMENTARIOS
                 let comentarioLuis = params.get('comentarios') || "";
                 document.getElementById('inputComentarios').value = comentarioLuis ? comentarioLuis : comentariosPreprogramados;
 
                 if(window.idDocFused) {
-                    // MODO ESCUDO
                     if(grupoPreprogramado) {
                         document.getElementById('selectPaqueteM').value = grupoPreprogramado;
                     }
@@ -769,7 +754,6 @@
                         });
                     }, 300);
                 } else {
-                    // FLUJO NORMAL (Luis desde cero)
                     if(params.get('manto')) {
                         document.getElementById('selectPaqueteM').value = params.get('manto');
                         aplicarPaquete();
@@ -777,7 +761,6 @@
                 }
             }
 
-            // Historial visual en vivo
             onSnapshot(query(serviciosRef, orderBy("timestamp", "desc")), (snaps) => {
                 const tbody = document.getElementById('tabla-historial-body');
                 const msgVacio = document.getElementById('mensaje-vacio');
