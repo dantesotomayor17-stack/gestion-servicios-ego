@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>E.G.O - Sistema de Flota Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Servicios e.go</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Estilos generales de impresión */
@@ -183,6 +183,7 @@
             </div>
             <div class="title-section">
                 <h1 style="font-weight: 900;">DESCRIPCIÓN DEL SERVICIO.</h1>
+                <h2 id="print-grupo-manto" style="font-size: 14px; font-weight: bold; letter-spacing: 1px; color: #333; margin: 2px 0 6px 0; text-transform: uppercase;"></h2>
                 <div id="print-notificacion-correctivo" class="notificacion-correctivo hidden">SERVICIO CORRECTIVO</div>
             </div>
             <div class="info-row">
@@ -475,6 +476,12 @@
             document.getElementById('print-km').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
             document.getElementById('print-fecha').innerText = fechaString;
 
+            // --- NUEVA LÍNEA: Escribir el mantenimiento seleccionado debajo del título ---
+            let textoManto = "PERSONALIZADO";
+            if (valorGrupo === "Correctivo") textoManto = "CORRECTIVO";
+            else if (valorGrupo) textoManto = valorGrupo.toUpperCase();
+            document.getElementById('print-grupo-manto').innerText = "MANTENIMIENTO: " + textoManto;
+
             const notificacionC = document.getElementById('print-notificacion-correctivo');
             if(valorGrupo === "Correctivo") { notificacionC.classList.remove('hidden'); } else { notificacionC.classList.add('hidden'); }
 
@@ -646,7 +653,19 @@
                             const chk = document.getElementById(`chk_${idx}`);
                             if(chk) chk.checked = true;
                         });
-                        if(datos.grupo === "Correctivo") document.getElementById('selectPaqueteM').value = "Correctivo";
+                        
+                        // --- MEJORA: Asignar el valor correcto al select para que el título salga bien en el historial ---
+                        if(datos.grupo) {
+                            if(datos.grupo === "Correctivo") { document.getElementById('selectPaqueteM').value = "Correctivo"; }
+                            else if(datos.grupo.includes("M1")) { document.getElementById('selectPaqueteM').value = "M1"; }
+                            else if(datos.grupo.includes("M2")) { document.getElementById('selectPaqueteM').value = "M2"; }
+                            else if(datos.grupo.includes("M3")) { document.getElementById('selectPaqueteM').value = "M3"; }
+                            else if(datos.grupo.includes("M4")) { document.getElementById('selectPaqueteM').value = "M4"; }
+                            else if(datos.grupo.includes("M5")) { document.getElementById('selectPaqueteM').value = "M5"; }
+                            else if(datos.grupo.includes("M6")) { document.getElementById('selectPaqueteM').value = "M6"; }
+                            else if(datos.grupo.includes("M7")) { document.getElementById('selectPaqueteM').value = "M7"; }
+                        }
+
                         window.generarHoja();
                         document.getElementById('btn-volver-ui').style.display = 'none';
                     }, 200);
