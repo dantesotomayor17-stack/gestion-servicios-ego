@@ -197,7 +197,6 @@
                 <div class="info-field"><span>BASE/RUTA.</span> <span class="info-line" id="print-base" style="width: 100px;"></span></div>
                 <div class="info-field"><span>KILOMETRAJE.</span> <span class="info-line" id="print-km" style="width: 80px;"></span></div>
                 <div class="info-field"><span>FECHA.</span> <span class="info-line" id="print-fecha" style="width: 80px;"></span></div>
-                <div class="info-field"><span>GAS.</span> <span class="info-line" id="print-gas" style="width: 50px;"></span></div>
             </div>
             <table class="table-container">
                 <thead>
@@ -467,8 +466,7 @@
             document.getElementById('print-base').innerText = base;
             document.getElementById('print-km').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
             document.getElementById('print-fecha').innerText = fechaString;
-            document.getElementById('print-gas').innerText = gas;
-            document.getElementById('fr-gas-recepcion').innerText = gas;
+            document.getElementById('fr-gas-recepcion').innerText = gas; // Solo se imprime aquí
 
             let textoManto = "PERSONALIZADO";
             if (valorGrupo === "Correctivo") textoManto = "CORRECTIVO";
