@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ===== AJUSTE FINAL: anti-caché para que el navegador SIEMPRE cargue la versión nueva (igual que la App 1) ===== -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Generador de Servicios e.go</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -53,16 +57,15 @@
         .fr-firmas { display: flex; justify-content: space-between; margin-top: 25px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
         .fr-firma-box { width: 45%; }
 
-        /* ===== DISEÑO DE FOTOS IGUAL A TU IMAGEN: fila 1 = FRONTAL | LICENCIA | TRASERA  ·  fila 2 = DERECHO | IZQUIERDO.
-           El tamaño usa PROPORCIONES (aspect-ratio), así se ve igual en cualquier ancho: ni gigante, ni torre, ni huecos blancos. ===== */
+        /* DISEÑO DE FOTOS (aprobado): fila 1 = FRONTAL | LICENCIA | TRASERA · fila 2 = DERECHO | IZQUIERDO */
         .grid-fila1 { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 10px; width: 100%; margin: 0 auto 10px auto; }
         .grid-fila2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin: 0 auto 15px auto; }
         .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; box-sizing: border-box; width: 100%; }
         .foto-header-title { font-size: 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 4px; padding-bottom: 1px; background-color: #f3f4f6; white-space: nowrap; }
         .foto-img-element { width: 100%; display: block; object-fit: contain; object-position: center; background: #ffffff; }
-        .ratio-v   { aspect-ratio: 8 / 9; }   /* frontal y trasera: ligeramente verticales */
-        .ratio-h   { aspect-ratio: 3 / 2; }   /* laterales: apaisadas */
-        .ratio-lic { aspect-ratio: 4 / 3; }   /* licencia: al centro, un poco más ancha */
+        .ratio-v   { aspect-ratio: 8 / 9; }
+        .ratio-h   { aspect-ratio: 3 / 2; }
+        .ratio-lic { aspect-ratio: 4 / 3; }
 
         .hidden-hoja { display: none !important; }
     </style>
@@ -235,7 +238,8 @@
                 </div>
             </div>
 
-            <div class="fr-title">FORMATO ENTREGA / RECEPCIÓN.</div>
+            <!-- ===== AJUSTE FINAL: el título ahora dice solo "FORMATO ENTREGA." ===== -->
+            <div class="fr-title">FORMATO ENTREGA.</div>
 
             <div class="fr-row">
                 <span class="fr-label">NUM. ECONÓMICO:</span> 
@@ -251,18 +255,19 @@
 
             <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
             
-            <!-- ===== FILA 1: FRONTAL | LICENCIA (centro) | TRASERA ===== -->
+            <!-- FILA 1: FRONTAL | LICENCIA (centro) | TRASERA -->
             <div class="grid-fila1">
                 <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Frontal'"></div>
                 <div class="foto-card"><div class="foto-header-title">5. LICENCIA OPERADOR</div><img id="img-licencia" src="" class="foto-img-element ratio-lic" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'"></div>
                 <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Trasera'"></div>
             </div>
-            <!-- ===== FILA 2: LATERAL DERECHO | LATERAL IZQUIERDO ===== -->
+            <!-- FILA 2: LATERAL DERECHO | LATERAL IZQUIERDO -->
             <div class="grid-fila2">
                 <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Der'"></div>
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Izq'"></div>
             </div>
 
+            <!-- ===== AJUSTE FINAL: OBSERVACIONES con 5 renglones (se quitó el que sobraba) ===== -->
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
                 <div class="fr-obs-title">OBSERVACIONES.</div>
                 <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
@@ -563,13 +568,13 @@
                         <div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">
                             ${decodeURIComponent(window.obsEsteticas).toUpperCase()}
                         </div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
+                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
                     `;
                 } else {
+                    // ===== AJUSTE FINAL: 5 renglones cuando no hay observaciones escritas =====
                     cajaObs.innerHTML = `
                         <div class="fr-obs-title">OBSERVACIONES.</div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div>
+                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
                     `;
                 }
             }
