@@ -49,17 +49,17 @@
         .fr-line-fixed { border-bottom: 1px solid black; display: inline-block; text-align: center; font-weight: bold; }
         .fr-obs-box { margin-top: 15px; flex-grow: 1; }
         .fr-obs-title { font-size: 11px; font-weight: bold; margin-bottom: 8px; }
-        .fr-obs-line { border-bottom: 1px solid black; height: 20px; width: 100%; }
-        .fr-firmas { display: flex; justify-content: space-between; margin-top: 25px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
+        .fr-obs-line { border-bottom: 1px solid black; height: 22px; width: 100%; }
+        .fr-firmas { display: flex; justify-content: space-between; margin-top: 40px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
         .fr-firma-box { width: 45%; }
 
-        /* ===== CUADRÍCULA DE FOTOS: 3 columnas, recuadros UNIFORMES y alineados (align-items start evita el descuadre) ===== */
-        .grid-fotos-reales { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; margin: 0 auto; align-items: start; }
-        /* ===== width 100% obliga a cada recuadro a llenar su celda => todos iguales, nada "salido" ===== */
-        .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; box-sizing: border-box; width: 100%; }
+        /* ESTILOS PARA LA CUADRÍCULA DE FOTOS */
+        /* ===== AJUSTE: justify-items center hace que cada recuadro se achique al tamaño de su foto y se centre (elimina el blanco dentro del marco) ===== */
+        .grid-fotos-reales { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin: 0 auto; justify-items: center; }
+        .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; box-sizing: border-box; }
         .foto-header-title { font-size: 8px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 4px; padding-bottom: 1px; background-color: #f3f4f6; white-space: nowrap; }
-        /* ===== CLAVE: recuadro VERTICAL fijo (aspect-ratio 3/4) + contain. Las fotos verticales llenan el marco sin blanco y sin recortar nada ===== */
-        .foto-img-element { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: contain; object-position: center; background: #ffffff; display: block; margin: 0 auto; }
+        /* ===== AJUSTE: height 135 -> 180 (fotos mas grandes) y width auto + max-width 100% (el recuadro abraza la foto sin recortarla) ===== */
+        .foto-img-element { height: 180px; width: auto; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; }
 
         .hidden-hoja { display: none !important; }
     </style>
@@ -248,15 +248,21 @@
 
             <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
             
-            <!-- ===== 3 verticales arriba + abajo IZQUIERDA junto a LICENCIA (doble, horizontal y grande). Todo alineado y uniforme ===== -->
             <div class="grid-fotos-reales" style="margin-bottom: 15px;">
-                <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element" onerror="this.src='https://placehold.co/300x400?text=Sin+Foto+Frontal'"></div>
-                <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element" onerror="this.src='https://placehold.co/300x400?text=Sin+Foto+Trasera'"></div>
-                <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element" onerror="this.src='https://placehold.co/300x400?text=Sin+Foto+Der'"></div>
-                <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/300x400?text=Sin+Foto+Izq'"></div>
-                <!-- ===== La licencia ocupa 2 espacios y su recuadro es HORIZONTAL (aspect 3/2) para que se vea grande y llena ===== -->
-                <div class="foto-card" style="grid-column: span 2;"><div class="foto-header-title">5. LICENCIA OPERADOR</div><img id="img-licencia" src="" class="foto-img-element" style="aspect-ratio: 3 / 2;" onerror="this.src='https://placehold.co/600x400?text=Sin+Foto+Licencia'"></div>
+                <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Frontal'"></div>
+                <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Trasera'"></div>
+                <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Der'"></div>
+                <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Izq'"></div>
             </div>
+
+            <!-- ===== AJUSTE: text-align center en el contenedor + display inline-block en el card para que el marco de la licencia tambien abrace la foto ===== -->
+            <div style="width: calc(50% - 3px); margin: 0 auto 15px auto; text-align: center;">
+                <div class="foto-card" style="display: inline-block;">
+                    <div class="foto-header-title">5. LICENCIA OPERADOR</div>
+                    <img id="img-licencia" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'">
+                </div>
+            </div>
+            <!-- ===== FIN AJUSTE ===== -->
 
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
                 <div class="fr-obs-title">OBSERVACIONES.</div>
@@ -282,6 +288,7 @@
                 </div>
             </div>
 
+            <!-- ===== AJUSTE PREVIO: margin-bottom para subir la direccion un renglon (solo Hoja 2) ===== -->
             <div class="footer-info" style="margin-bottom: 15px;"> 
                 <strong>PRIV. SIN NOMBRE #101</strong><br>COL. TORRES DE SANTO DOMINGO<br>SAN NICOLAS DE LOS GARZA, N.L.<br>C.P. 66440
             </div>
