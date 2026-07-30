@@ -253,6 +253,15 @@
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Izq'"></div>
             </div>
 
+            <!-- ===== NUEVO: Tarjeta de LICENCIA centrada, mismo tamaño que las de arriba ===== -->
+            <div style="width: calc(50% - 3px); margin: 0 auto 15px auto;">
+                <div class="foto-card">
+                    <div class="foto-header-title">5. LICENCIA OPERADOR</div>
+                    <img id="img-licencia" src="" class="foto-img-element" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'">
+                </div>
+            </div>
+            <!-- ===== FIN NUEVO ===== -->
+
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
                 <div class="fr-obs-title">OBSERVACIONES.</div>
                 <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
@@ -310,6 +319,7 @@
         window.urlFotoTrasera = params.get('f_trasera') || "";
         window.urlFotoDerecha = params.get('f_derecha') || "";
         window.urlFotoIzquierda = params.get('f_izquierda') || "";
+        window.urlFotoLicencia = params.get('f_licencia') || "";   // ===== NUEVO: leer la licencia que manda la App 1 =====
         window.obsEsteticas = params.get('obsest') || "";
         window.filaExcelOrigen = params.get('fila');
         window.hojaExcelOrigen = params.get('hoja');
@@ -543,6 +553,7 @@
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
             if(window.urlFotoDerecha) document.getElementById('img-right').src = window.urlFotoDerecha;
             if(window.urlFotoIzquierda) document.getElementById('img-left').src = window.urlFotoIzquierda;
+            if(window.urlFotoLicencia) document.getElementById('img-licencia').src = window.urlFotoLicencia;   // ===== NUEVO: mostrar la licencia en la hoja =====
 
             const cajaObs = document.getElementById('fr-caja-obs-recepcion');
             if(cajaObs) {
@@ -567,7 +578,8 @@
                 guardarEnFirebase({ 
                     fecha: fechaString, economico: economico, base: base, kilometraje: kilometraje,
                     mecanico: mecanico, comentarios: textoComentarios, obsEsteticas: window.obsEsteticas, servicios: serviciosMarcados, grupo: grupoSeleccionado,
-                    fotos: { frontal: window.urlFotoFrontal, trasera: window.urlFotoTrasera, derecha: window.urlFotoDerecha, izquierda: window.urlFotoIzquierda }
+                    // ===== NUEVO: se agregó "licencia" al objeto de fotos para guardarla en Firebase =====
+                    fotos: { frontal: window.urlFotoFrontal, trasera: window.urlFotoTrasera, derecha: window.urlFotoDerecha, izquierda: window.urlFotoIzquierda, licencia: window.urlFotoLicencia }
                 });
             }
 
@@ -646,6 +658,7 @@
                     window.urlFotoTrasera = (datos.fotos && datos.fotos.trasera) ? datos.fotos.trasera : '';
                     window.urlFotoDerecha = (datos.fotos && datos.fotos.derecha) ? datos.fotos.derecha : '';
                     window.urlFotoIzquierda = (datos.fotos && datos.fotos.izquierda) ? datos.fotos.izquierda : '';
+                    window.urlFotoLicencia = (datos.fotos && datos.fotos.licencia) ? datos.fotos.licencia : '';   // ===== NUEVO: leer la licencia guardada =====
                     window.obsEsteticas = datos.obsEsteticas || '';
 
                     cargarCheckboxes();
