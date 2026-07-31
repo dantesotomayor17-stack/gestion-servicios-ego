@@ -61,6 +61,11 @@
         .ratio-h   { aspect-ratio: 3 / 2; }
         .ratio-lic { aspect-ratio: 4 / 3; }
 
+        /* ===== NUEVO: tarjeta de licencia destacada para SALIDA ===== */
+        .licencia-salida-wrap { width: 62%; margin: 10px auto 15px auto; }
+        .licencia-salida-wrap .foto-card { border: 2px solid #1a73e8; background-color: #f5f9ff; }
+        .licencia-salida-wrap .foto-header-title { background-color: #1a73e8; color: #fff; font-size: 9px; padding: 3px 1px; border-bottom: none; }
+
         .hidden-hoja { display: none !important; }
     </style>
 </head>
@@ -246,16 +251,27 @@
                 <span class="fr-line-fixed" style="width: 150px;" id="fr-km-recepcion"></span>
             </div>
 
-            <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
+            <!-- ===== Label de carrocería (se oculta en SALIDA) ===== -->
+            <div class="fr-label" id="fr-label-carroceria" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
             
-            <div class="grid-fila1">
+            <!-- ===== Grids de carrocería (se ocultan en SALIDA) ===== -->
+            <div class="grid-fila1" id="fr-grid-fila1">
                 <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Frontal'"></div>
                 <div class="foto-card"><div class="foto-header-title">5. LICENCIA OPERADOR</div><img id="img-licencia" src="" class="foto-img-element ratio-lic" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'"></div>
                 <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Trasera'"></div>
             </div>
-            <div class="grid-fila2">
+            <div class="grid-fila2" id="fr-grid-fila2">
                 <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Der'"></div>
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Izq'"></div>
+            </div>
+
+            <!-- ===== NUEVO: licencia destacada, solo visible en SALIDA ===== -->
+            <div class="licencia-salida-wrap hidden-hoja" id="fr-licencia-salida">
+                <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px; text-align: center; display: block;">LICENCIA DEL OPERADOR (EVIDENCIA DE SALIDA)</div>
+                <div class="foto-card">
+                    <div class="foto-header-title">LICENCIA OPERADOR</div>
+                    <img id="img-licencia-salida" src="" class="foto-img-element ratio-lic" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'">
+                </div>
             </div>
 
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
@@ -306,22 +322,13 @@
 
         window.movimientoTipo = params.get('movimiento') || "ENTRADA";
 
-        // =====================================================================
-        // ===== FIX: LINK DE SALIDA EN GOOGLE SHEET ===========================
-        // Función reutilizable que escribe el hipervínculo en la celda del
-        // Google Sheet (columna "HOJA DE SERVICIO"). Antes este fetch vivía
-        // SOLO dentro de guardarEnFirebase(), y como en SALIDA no hay servicios
-        // marcados, esa función nunca corría => la salida quedaba en
-        // "Esperando link...". Ahora la llamamos también desde SALIDA.
-        // =====================================================================
         function actualizarLinkEnHojaExcel(link) {
-            if (!window.filaExcelOrigen || !window.hojaExcelOrigen) return; // sin fila/hoja no hay dónde escribir
+            if (!window.filaExcelOrigen || !window.hojaExcelOrigen) return;
             fetch(URL_WEBAPP, {
                 method: 'POST', mode: 'no-cors',
                 body: JSON.stringify({ action: "updateLink", hoja: window.hojaExcelOrigen, fila: window.filaExcelOrigen, link: link })
             }).catch(e => console.log("Aviso de fetch updateLink:", e));
         }
-        // ===== FIN FIX =======================================================
 
         const listaServicios = [
             "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
@@ -345,31 +352,14 @@
             "M5": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO DE SECADOR COMPLETO", "REVISION SEMESTRAL DE CLIMA", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR"],
             "M6": ["CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE", "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A", "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS", "REVISION DE BALATAS", "REVISION DE BALEROS", "CAMBIO DE BALEROS", "CAMBIO DE FILTRO DE SECADOR", "REVISION SEMESTRAL DE CLIMA", "CAMBIO FILTROS DE TRANSMISION", "NIVEL ACEITE DE TRANSMISION", "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR", "CAMBIO DE FILTRO HIDRAULICO"],
             "M7": [
-                "CAMBIO DE ACEITE DE MOTOR",
-                "CAMBIO DE FILTRO DE ACEITE MOTOR",
-                "CAMBIO DE FILTRO DE AIRE",
-                "FILTRO DE GAS DE ALTA PRESION",
-                "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR",
-                "FILTRO DE GAS BAJA PRESION ZONA MOTOR",
-                "NIVEL ACEITE DE TRANSMISION",
-                "CAMBIO ACEITE TRANSMISION",
-                "CAMBIO FILTROS DE TRANSMISION",
-                "REVISION NIVEL ACEITE DIFERENCIAL",
-                "CAMBIO DE ACEITE DIFERENCIAL",
-                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS",
-                "ENGRASADO PUERTAS SERVICIO TRASERAS",
-                "ENGRASADO POLEAS TENSORAS A.A",
-                "ENGRASADO DE CRUCETAS BARRA CARDAN",
-                "ENGRASADO PERNO DE DIRECCION",
-                "ENGRASADO DE TERMINALES DE DIRECCION",
-                "ENGRASADO DE MATRACAS",
-                "CAMBIO DE BALEROS",
-                "REVISION DE BALATAS",
-                "CAMBIO DE BALATAS DELANTERAS",
-                "CAMBIO DE BALATAS TRASERAS",
-                "CAMBIO DE SECADOR COMPLETO",
-                "REVISION DE SISTEMA ELECTRICO",
-                "CAMBIO DE CABLES Y BUJIAS"
+                "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
+                "FILTRO DE GAS DE ALTA PRESION", "FILTRO DE GAS BAJA PRESION ZONA DE POSTENFRIADOR", "FILTRO DE GAS BAJA PRESION ZONA MOTOR",
+                "NIVEL ACEITE DE TRANSMISION", "CAMBIO ACEITE TRANSMISION", "CAMBIO FILTROS DE TRANSMISION",
+                "REVISION NIVEL ACEITE DIFERENCIAL", "CAMBIO DE ACEITE DIFERENCIAL",
+                "ENGRASADO DE PUERTAS DE SERVICIO DELANTERAS", "ENGRASADO PUERTAS SERVICIO TRASERAS", "ENGRASADO POLEAS TENSORAS A.A",
+                "ENGRASADO DE CRUCETAS BARRA CARDAN", "ENGRASADO PERNO DE DIRECCION", "ENGRASADO DE TERMINALES DE DIRECCION", "ENGRASADO DE MATRACAS",
+                "CAMBIO DE BALEROS", "REVISION DE BALATAS", "CAMBIO DE BALATAS DELANTERAS", "CAMBIO DE BALATAS TRASERAS",
+                "CAMBIO DE SECADOR COMPLETO", "REVISION DE SISTEMA ELECTRICO", "CAMBIO DE CABLES Y BUJIAS"
             ]
         };
 
@@ -549,6 +539,20 @@
 
             document.getElementById('fr-titulo-hoja').innerText = esSalida ? "FORMATO ENTREGA." : "FORMATO RECEPCION.";
 
+            // ===== NUEVO: en SALIDA se oculta carrocería y se muestra solo la licencia destacada =====
+            if (esSalida) {
+                document.getElementById('fr-label-carroceria').classList.add('hidden-hoja');
+                document.getElementById('fr-grid-fila1').classList.add('hidden-hoja');
+                document.getElementById('fr-grid-fila2').classList.add('hidden-hoja');
+                document.getElementById('fr-licencia-salida').classList.remove('hidden-hoja');
+                if (window.urlFotoLicencia) document.getElementById('img-licencia-salida').src = window.urlFotoLicencia;
+            } else {
+                document.getElementById('fr-label-carroceria').classList.remove('hidden-hoja');
+                document.getElementById('fr-grid-fila1').classList.remove('hidden-hoja');
+                document.getElementById('fr-grid-fila2').classList.remove('hidden-hoja');
+                document.getElementById('fr-licencia-salida').classList.add('hidden-hoja');
+            }
+
             const firmasContainer = document.getElementById('fr-firmas-container');
             if (esSalida) {
                 firmasContainer.innerHTML = `
@@ -590,6 +594,7 @@
                 `;
             }
 
+            // Fotos de carrocería (solo tendrán valor en ENTRADA; en SALIDA quedan ocultas)
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
             if(window.urlFotoDerecha) document.getElementById('img-right').src = window.urlFotoDerecha;
@@ -625,24 +630,16 @@
             document.getElementById('ui-container').style.display = 'none';
             document.getElementById('print-container').style.display = 'block';
 
-            // ===== CAMBIO 5 + FIX: vista y link según ENTRADA / SALIDA =====
             if (esSalida) {
                 toggleHojas('recepcion');
                 document.getElementById('btn-tg-servicio').style.display = 'none';
                 document.getElementById('btn-tg-ambas').style.display = 'none';
 
-                // ===== FIX: LINK DE SALIDA EN GOOGLE SHEET =====================
-                // En SALIDA no se guarda en Firebase (no hay servicios), por lo que
-                // construimos un link con parámetros que, al abrirse desde el sheet,
-                // regenera la hoja "FORMATO ENTREGA". Este link NO lleva fila/hoja,
-                // así que reabrirlo NO re-escribe el sheet (evita duplicados).
                 const linkSalida = `https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?unidad=${encodeURIComponent(economico)}&ruta=${encodeURIComponent(base)}&km=${encodeURIComponent(kilometraje)}&comentarios=${encodeURIComponent(textoComentarios)}&obsest=${encodeURIComponent(window.obsEsteticas || '')}&movimiento=SALIDA&f_frontal=${encodeURIComponent(window.urlFotoFrontal)}&f_trasera=${encodeURIComponent(window.urlFotoTrasera)}&f_derecha=${encodeURIComponent(window.urlFotoDerecha)}&f_izquierda=${encodeURIComponent(window.urlFotoIzquierda)}&f_licencia=${encodeURIComponent(window.urlFotoLicencia)}`;
                 actualizarLinkEnHojaExcel(linkSalida);
-                // ===== FIN FIX =================================================
             } else {
                 toggleHojas('ambas');
             }
-            // ===== FIN CAMBIO 5 =====
 
             if(document.getElementById('btn-volver-ui')) document.getElementById('btn-volver-ui').style.display = 'inline-block';
             window.scrollTo(0, 0); 
@@ -674,10 +671,8 @@
                     if(esProgramacionOficina) alert(" BORRADOR GUARDADO. La unidad quedó pre-programada correctamente.");
                 }
 
-                // ===== FIX: ahora usa la función reutilizable (mismo comportamiento en ENTRADA) =====
                 const linkUnico = "https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?ver=" + docIdFinal;
                 actualizarLinkEnHojaExcel(linkUnico);
-                // ===== FIN FIX =====
             } catch (e) { console.error("Error al guardar: ", e); }
         }
 
