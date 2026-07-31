@@ -232,7 +232,7 @@
                 </div>
             </div>
 
-            <!-- ===== CAMBIO 1: Se agregó id="fr-titulo-hoja" para cambiar dinámicamente ===== -->
+            <!-- ===== CAMBIO 1: Título dinámico (FORMATO RECEPCION / FORMATO ENTREGA) ===== -->
             <div class="fr-title" id="fr-titulo-hoja">FORMATO RECEPCION.</div>
 
             <div class="fr-row">
@@ -264,7 +264,7 @@
                 <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
             </div>
 
-            <!-- ===== CAMBIO 2: Se reemplazaron las 2 firmas estáticas por un contenedor dinámico ===== -->
+            <!-- ===== CAMBIO 2: Contenedor dinámico de firmas ===== -->
             <div class="fr-firmas" id="fr-firmas-container"></div>
 
             <div class="footer-info" style="margin-bottom: 15px;"> 
@@ -531,22 +531,28 @@
             document.getElementById('fr-base').innerText = base;
             document.getElementById('fr-km-recepcion').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
 
-            // ===== CAMBIO 4: Lógica para cambiar título y firmas según ENTRADA o SALIDA =====
+            // ===== CAMBIO 4: Título y firmas dinámicas según ENTRADA o SALIDA =====
             const esSalida = (window.movimientoTipo === "SALIDA");
 
-            // Cambiar el título de la Hoja 2
             document.getElementById('fr-titulo-hoja').innerText = esSalida ? "FORMATO ENTREGA." : "FORMATO RECEPCION.";
 
-            // Cambiar las firmas dinámicamente
             const firmasContainer = document.getElementById('fr-firmas-container');
             if (esSalida) {
-                // SALIDA: Una sola firma centrada
+                // SALIDA: Dos firmas, ambas con la misma fecha automática
                 firmasContainer.innerHTML = `
-                    <div style="width: 100%; text-align: center;">
-                        <div style="border-bottom: 1px solid black; margin-bottom: 8px; width: 320px; margin-left: auto; margin-right: auto;"></div>
-                        <div style="font-weight: bold; font-size: 11px; letter-spacing: 0.5px;">FIRMA DE AUTORIZACIÓN DE ENTREGA DE UNIDAD</div>
+                    <div class="fr-firma-box">
+                        <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
+                        <div>FIRMA DE AUTORIZACIÓN DE ENTREGA DE UNIDAD</div>
                         <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                            <span style="margin-right: 5px; font-weight: bold; font-size: 10px;">FECHA.</span>
+                            <span style="margin-right: 5px;">FECHA.</span>
+                            <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;">${fechaString}</span>
+                        </div>
+                    </div>
+                    <div class="fr-firma-box">
+                        <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
+                        <div>FIRMA DE SALIDA DE UNIDAD DE GD</div>
+                        <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
+                            <span style="margin-right: 5px;">FECHA.</span>
                             <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;">${fechaString}</span>
                         </div>
                     </div>
@@ -609,7 +615,7 @@
             document.getElementById('ui-container').style.display = 'none';
             document.getElementById('print-container').style.display = 'block';
 
-            // ===== CAMBIO 5: En SALIDA mostrar solo la hoja de entrega, ocultar botones innecesarios =====
+            // ===== CAMBIO 5: En SALIDA mostrar solo la hoja de entrega =====
             if (esSalida) {
                 toggleHojas('recepcion');
                 document.getElementById('btn-tg-servicio').style.display = 'none';
@@ -796,7 +802,7 @@
                 window.cargarHojaDesdeFirebase(verId);
             } else if(params.get('unidad')) {
 
-                // ===== CAMBIO 6: Si viene de SALIDA, pre-llenar y auto-generar directamente =====
+                // ===== CAMBIO 6: Si viene de SALIDA, pre-llenar y auto-generar la hoja de entrega =====
                 if (params.get('movimiento') === 'SALIDA') {
                     document.getElementById('inputEco').value = params.get('unidad') || "";
                     document.getElementById('inputBase').value = params.get('ruta') || "";
