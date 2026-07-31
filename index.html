@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- ===== AJUSTE FINAL: anti-caché para que el navegador SIEMPRE cargue la versión nueva (igual que la App 1) ===== -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Generador de Servicios e.go</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Estilos generales de impresión */
         @media print {
             body { background-color: white; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             #ui-container { display: none !important; }
@@ -21,10 +19,8 @@
             @page { size: letter portrait; margin: 0.4cm 1.5cm; } 
         }
 
-        /* Contenedor principal de impresión */
         #print-container { display: none; width: 100%; max-width: 720px; margin: 0 auto; color: black; background-color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
 
-        /* FORMATO 1: DESCRIPCIÓN DE SERVICIO */
         .formato-servicio { font-family: Arial, sans-serif; padding: 10px 30px; background: white; }
         .hoja-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .title-section { text-align: center; margin: 0; flex-grow: 1; }
@@ -44,7 +40,6 @@
         .col-persona { width: 30%; }
         .footer-info { margin-top: 10px; font-size: 9px; text-align: center; line-height: 1.2; }
 
-        /* FORMATO 2: RECEPCIÓN DE UNIDAD */
         .formato-recepcion { font-family: Arial, sans-serif; padding: 10px 30px; background: white; min-height: 25cm; display: flex; flex-direction: column; }
         .fr-title { font-size: 13px; font-weight: bold; margin-bottom: 15px; letter-spacing: 0.5px; }
         .fr-row { margin-bottom: 12px; font-size: 11px; display: flex; align-items: flex-end; width: 100%; }
@@ -57,7 +52,6 @@
         .fr-firmas { display: flex; justify-content: space-between; margin-top: 25px; margin-bottom: 20px; text-align: center; font-size: 10px; font-weight: bold; }
         .fr-firma-box { width: 45%; }
 
-        /* DISEÑO DE FOTOS (aprobado): fila 1 = FRONTAL | LICENCIA | TRASERA · fila 2 = DERECHO | IZQUIERDO */
         .grid-fila1 { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 10px; width: 100%; margin: 0 auto 10px auto; }
         .grid-fila2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin: 0 auto 15px auto; }
         .foto-card { border: 1px solid black; padding: 3px; text-align: center; background-color: #fafafa; box-sizing: border-box; width: 100%; }
@@ -238,8 +232,8 @@
                 </div>
             </div>
 
-            <!-- ===== AJUSTE FINAL: el título ahora dice solo "FORMATO ENTREGA." ===== -->
-            <div class="fr-title">FORMATO RECEPCION.</div>
+            <!-- ===== CAMBIO 1: Se agregó id="fr-titulo-hoja" para cambiar dinámicamente ===== -->
+            <div class="fr-title" id="fr-titulo-hoja">FORMATO RECEPCION.</div>
 
             <div class="fr-row">
                 <span class="fr-label">NUM. ECONÓMICO:</span> 
@@ -255,42 +249,23 @@
 
             <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
             
-            <!-- FILA 1: FRONTAL | LICENCIA (centro) | TRASERA -->
             <div class="grid-fila1">
                 <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Frontal'"></div>
                 <div class="foto-card"><div class="foto-header-title">5. LICENCIA OPERADOR</div><img id="img-licencia" src="" class="foto-img-element ratio-lic" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'"></div>
                 <div class="foto-card"><div class="foto-header-title">2. VISTA TRASERA</div><img id="img-back" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Trasera'"></div>
             </div>
-            <!-- FILA 2: LATERAL DERECHO | LATERAL IZQUIERDO -->
             <div class="grid-fila2">
                 <div class="foto-card"><div class="foto-header-title">3. LATERAL DERECHO</div><img id="img-right" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Der'"></div>
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Izq'"></div>
             </div>
 
-            <!-- ===== AJUSTE FINAL: OBSERVACIONES con 4 renglones (se quitó un renglón) ===== -->
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
                 <div class="fr-obs-title">OBSERVACIONES.</div>
                 <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
             </div>
 
-            <div class="fr-firmas">
-                <div class="fr-firma-box">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                    <div>FIRMA DE INGRESO DE UNIDAD A GD</div>
-                    <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                        <span style="margin-right: 5px;">FECHA.</span>
-                        <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;" id="fr-fecha-ingreso"></span>
-                    </div>
-                </div>
-                <div class="fr-firma-box">
-                    <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                    <div>FIRMA DE SALIDA DE GD</div>
-                    <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
-                        <span style="margin-right: 5px;">FECHA.</span>
-                        <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;"></span>
-                    </div>
-                </div>
-            </div>
+            <!-- ===== CAMBIO 2: Se reemplazaron las 2 firmas estáticas por un contenedor dinámico ===== -->
+            <div class="fr-firmas" id="fr-firmas-container"></div>
 
             <div class="footer-info" style="margin-bottom: 15px;"> 
                 <strong>PRIV. SIN NOMBRE #101</strong><br>COL. TORRES DE SANTO DOMINGO<br>SAN NICOLAS DE LOS GARZA, N.L.<br>C.P. 66440
@@ -330,6 +305,9 @@
         window.filaExcelOrigen = params.get('fila');
         window.hojaExcelOrigen = params.get('hoja');
         window.idDocFused = null;
+
+        // ===== CAMBIO 3: Detectar si viene de una SALIDA =====
+        window.movimientoTipo = params.get('movimiento') || "ENTRADA";
 
         const listaServicios = [
             "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
@@ -552,7 +530,49 @@
             document.getElementById('fr-eco').innerText = economico;
             document.getElementById('fr-base').innerText = base;
             document.getElementById('fr-km-recepcion').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
-            document.getElementById('fr-fecha-ingreso').innerText = fechaString;
+
+            // ===== CAMBIO 4: Lógica para cambiar título y firmas según ENTRADA o SALIDA =====
+            const esSalida = (window.movimientoTipo === "SALIDA");
+
+            // Cambiar el título de la Hoja 2
+            document.getElementById('fr-titulo-hoja').innerText = esSalida ? "FORMATO ENTREGA." : "FORMATO RECEPCION.";
+
+            // Cambiar las firmas dinámicamente
+            const firmasContainer = document.getElementById('fr-firmas-container');
+            if (esSalida) {
+                // SALIDA: Una sola firma centrada
+                firmasContainer.innerHTML = `
+                    <div style="width: 100%; text-align: center;">
+                        <div style="border-bottom: 1px solid black; margin-bottom: 8px; width: 320px; margin-left: auto; margin-right: auto;"></div>
+                        <div style="font-weight: bold; font-size: 11px; letter-spacing: 0.5px;">FIRMA DE AUTORIZACIÓN DE ENTREGA DE UNIDAD</div>
+                        <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
+                            <span style="margin-right: 5px; font-weight: bold; font-size: 10px;">FECHA.</span>
+                            <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;">${fechaString}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // ENTRADA: Dos firmas (ingreso + salida)
+                firmasContainer.innerHTML = `
+                    <div class="fr-firma-box">
+                        <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
+                        <div>FIRMA DE INGRESO DE UNIDAD A GD</div>
+                        <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
+                            <span style="margin-right: 5px;">FECHA.</span>
+                            <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;">${fechaString}</span>
+                        </div>
+                    </div>
+                    <div class="fr-firma-box">
+                        <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
+                        <div>FIRMA DE SALIDA DE GD</div>
+                        <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
+                            <span style="margin-right: 5px;">FECHA.</span>
+                            <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;"></span>
+                        </div>
+                    </div>
+                `;
+            }
+            // ===== FIN CAMBIO 4 =====
 
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
@@ -571,7 +591,6 @@
                         <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
                     `;
                 } else {
-                    // ===== AJUSTE FINAL: 4 renglones cuando no hay observaciones escritas =====
                     cajaObs.innerHTML = `
                         <div class="fr-obs-title">OBSERVACIONES.</div>
                         <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
@@ -589,7 +608,16 @@
 
             document.getElementById('ui-container').style.display = 'none';
             document.getElementById('print-container').style.display = 'block';
-            toggleHojas('ambas'); 
+
+            // ===== CAMBIO 5: En SALIDA mostrar solo la hoja de entrega, ocultar botones innecesarios =====
+            if (esSalida) {
+                toggleHojas('recepcion');
+                document.getElementById('btn-tg-servicio').style.display = 'none';
+                document.getElementById('btn-tg-ambas').style.display = 'none';
+            } else {
+                toggleHojas('ambas');
+            }
+            // ===== FIN CAMBIO 5 =====
 
             if(document.getElementById('btn-volver-ui')) document.getElementById('btn-volver-ui').style.display = 'inline-block';
             window.scrollTo(0, 0); 
@@ -767,6 +795,22 @@
             if(verId) {
                 window.cargarHojaDesdeFirebase(verId);
             } else if(params.get('unidad')) {
+
+                // ===== CAMBIO 6: Si viene de SALIDA, pre-llenar y auto-generar directamente =====
+                if (params.get('movimiento') === 'SALIDA') {
+                    document.getElementById('inputEco').value = params.get('unidad') || "";
+                    document.getElementById('inputBase').value = params.get('ruta') || "";
+                    document.getElementById('inputKm').value = params.get('km') || "";
+                    document.getElementById('inputComentarios').value = params.get('comentarios') || "";
+                    document.getElementById('inputObsEsteticas').value = params.get('obsest') || "";
+                    document.getElementById('inputMecanico').value = "";
+                    window.obsEsteticas = params.get('obsest') || "";
+                    window.movimientoTipo = "SALIDA";
+                    setTimeout(() => { window.generarHoja(); }, 300);
+                    return;
+                }
+                // ===== FIN CAMBIO 6 =====
+
                 const uParam = params.get('unidad');
                 
                 let serviciosPreprogramados = [];
