@@ -232,7 +232,6 @@
                 </div>
             </div>
 
-            <!-- ===== CAMBIO 1: Título dinámico (FORMATO RECEPCION / FORMATO ENTREGA) ===== -->
             <div class="fr-title" id="fr-titulo-hoja">FORMATO RECEPCION.</div>
 
             <div class="fr-row">
@@ -264,7 +263,6 @@
                 <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
             </div>
 
-            <!-- ===== CAMBIO 2: Contenedor dinámico de firmas ===== -->
             <div class="fr-firmas" id="fr-firmas-container"></div>
 
             <div class="footer-info" style="margin-bottom: 15px;"> 
@@ -306,8 +304,24 @@
         window.hojaExcelOrigen = params.get('hoja');
         window.idDocFused = null;
 
-        // ===== CAMBIO 3: Detectar si viene de una SALIDA =====
         window.movimientoTipo = params.get('movimiento') || "ENTRADA";
+
+        // =====================================================================
+        // ===== FIX: LINK DE SALIDA EN GOOGLE SHEET ===========================
+        // Función reutilizable que escribe el hipervínculo en la celda del
+        // Google Sheet (columna "HOJA DE SERVICIO"). Antes este fetch vivía
+        // SOLO dentro de guardarEnFirebase(), y como en SALIDA no hay servicios
+        // marcados, esa función nunca corría => la salida quedaba en
+        // "Esperando link...". Ahora la llamamos también desde SALIDA.
+        // =====================================================================
+        function actualizarLinkEnHojaExcel(link) {
+            if (!window.filaExcelOrigen || !window.hojaExcelOrigen) return; // sin fila/hoja no hay dónde escribir
+            fetch(URL_WEBAPP, {
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify({ action: "updateLink", hoja: window.hojaExcelOrigen, fila: window.filaExcelOrigen, link: link })
+            }).catch(e => console.log("Aviso de fetch updateLink:", e));
+        }
+        // ===== FIN FIX =======================================================
 
         const listaServicios = [
             "CAMBIO DE ACEITE DE MOTOR", "CAMBIO DE FILTRO DE ACEITE MOTOR", "CAMBIO DE FILTRO DE AIRE",
@@ -531,14 +545,12 @@
             document.getElementById('fr-base').innerText = base;
             document.getElementById('fr-km-recepcion').innerText = kilometraje ? new Intl.NumberFormat('es-MX').format(kilometraje) : "";
 
-            // ===== CAMBIO 4: Título y firmas dinámicas según ENTRADA o SALIDA =====
             const esSalida = (window.movimientoTipo === "SALIDA");
 
             document.getElementById('fr-titulo-hoja').innerText = esSalida ? "FORMATO ENTREGA." : "FORMATO RECEPCION.";
 
             const firmasContainer = document.getElementById('fr-firmas-container');
             if (esSalida) {
-                // SALIDA: Dos firmas, ambas con fecha automática
                 firmasContainer.innerHTML = `
                     <div class="fr-firma-box">
                         <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
@@ -558,7 +570,6 @@
                     </div>
                 `;
             } else {
-                // ENTRADA: Dos firmas, ambas con fecha automática
                 firmasContainer.innerHTML = `
                     <div class="fr-firma-box">
                         <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
@@ -578,7 +589,6 @@
                     </div>
                 `;
             }
-            // ===== FIN CAMBIO 4 =====
 
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
@@ -615,11 +625,20 @@
             document.getElementById('ui-container').style.display = 'none';
             document.getElementById('print-container').style.display = 'block';
 
-            // ===== CAMBIO 5: En SALIDA mostrar solo la hoja de entrega =====
+            // ===== CAMBIO 5 + FIX: vista y link según ENTRADA / SALIDA =====
             if (esSalida) {
                 toggleHojas('recepcion');
                 document.getElementById('btn-tg-servicio').style.display = 'none';
                 document.getElementById('btn-tg-ambas').style.display = 'none';
+
+                // ===== FIX: LINK DE SALIDA EN GOOGLE SHEET =====================
+                // En SALIDA no se guarda en Firebase (no hay servicios), por lo que
+                // construimos un link con parámetros que, al abrirse desde el sheet,
+                // regenera la hoja "FORMATO ENTREGA". Este link NO lleva fila/hoja,
+                // así que reabrirlo NO re-escribe el sheet (evita duplicados).
+                const linkSalida = `https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?unidad=${encodeURIComponent(economico)}&ruta=${encodeURIComponent(base)}&km=${encodeURIComponent(kilometraje)}&comentarios=${encodeURIComponent(textoComentarios)}&obsest=${encodeURIComponent(window.obsEsteticas || '')}&movimiento=SALIDA&f_frontal=${encodeURIComponent(window.urlFotoFrontal)}&f_trasera=${encodeURIComponent(window.urlFotoTrasera)}&f_derecha=${encodeURIComponent(window.urlFotoDerecha)}&f_izquierda=${encodeURIComponent(window.urlFotoIzquierda)}&f_licencia=${encodeURIComponent(window.urlFotoLicencia)}`;
+                actualizarLinkEnHojaExcel(linkSalida);
+                // ===== FIN FIX =================================================
             } else {
                 toggleHojas('ambas');
             }
@@ -655,13 +674,10 @@
                     if(esProgramacionOficina) alert(" BORRADOR GUARDADO. La unidad quedó pre-programada correctamente.");
                 }
 
-                if (window.filaExcelOrigen && window.hojaExcelOrigen) {
-                    const linkUnico = "https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?ver=" + docIdFinal;
-                    fetch(URL_WEBAPP, {
-                        method: 'POST', mode: 'no-cors',
-                        body: JSON.stringify({ action: "updateLink", hoja: window.hojaExcelOrigen, fila: window.filaExcelOrigen, link: linkUnico })
-                    }).catch(e => console.log("Aviso de fetch:", e));
-                }
+                // ===== FIX: ahora usa la función reutilizable (mismo comportamiento en ENTRADA) =====
+                const linkUnico = "https://dantesotomayor17-stack.github.io/gestion-servicios-ego/?ver=" + docIdFinal;
+                actualizarLinkEnHojaExcel(linkUnico);
+                // ===== FIN FIX =====
             } catch (e) { console.error("Error al guardar: ", e); }
         }
 
@@ -802,7 +818,6 @@
                 window.cargarHojaDesdeFirebase(verId);
             } else if(params.get('unidad')) {
 
-                // ===== CAMBIO 6: Si viene de SALIDA, pre-llenar y auto-generar la hoja de entrega =====
                 if (params.get('movimiento') === 'SALIDA') {
                     document.getElementById('inputEco').value = params.get('unidad') || "";
                     document.getElementById('inputBase').value = params.get('ruta') || "";
@@ -815,7 +830,6 @@
                     setTimeout(() => { window.generarHoja(); }, 300);
                     return;
                 }
-                // ===== FIN CAMBIO 6 =====
 
                 const uParam = params.get('unidad');
                 
