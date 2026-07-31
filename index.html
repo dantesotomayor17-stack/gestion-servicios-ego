@@ -538,7 +538,7 @@
 
             const firmasContainer = document.getElementById('fr-firmas-container');
             if (esSalida) {
-                // SALIDA: Dos firmas, ambas con la misma fecha automática
+                // SALIDA: Dos firmas, ambas con fecha automática
                 firmasContainer.innerHTML = `
                     <div class="fr-firma-box">
                         <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
@@ -558,7 +558,7 @@
                     </div>
                 `;
             } else {
-                // ENTRADA: Dos firmas (ingreso + salida)
+                // ENTRADA: Dos firmas, ambas con fecha automática
                 firmasContainer.innerHTML = `
                     <div class="fr-firma-box">
                         <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
@@ -570,10 +570,10 @@
                     </div>
                     <div class="fr-firma-box">
                         <div style="border-bottom: 1px solid black; margin-bottom: 8px;"></div>
-                        <div>FIRMA DE SALIDA DE GD</div>
+                        <div>FIRMA DE AUTORIZACION DE ENTRADA DE UNIDAD A GD</div>
                         <div style="margin-top: 15px; display: flex; align-items: flex-end; justify-content: center;">
                             <span style="margin-right: 5px;">FECHA.</span>
-                            <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;"></span>
+                            <span style="border-bottom: 1px solid black; width: 120px; display: inline-block; min-height: 12px;">${fechaString}</span>
                         </div>
                     </div>
                 `;
