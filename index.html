@@ -267,10 +267,10 @@
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Izq'"></div>
             </div>
 
-            <!-- ===== AJUSTE FINAL: OBSERVACIONES con 5 renglones (se quitó el que sobraba) ===== -->
+            <!-- ===== AJUSTE FINAL: OBSERVACIONES con 4 renglones (se quitó un renglón) ===== -->
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
                 <div class="fr-obs-title">OBSERVACIONES.</div>
-                <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
+                <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
             </div>
 
             <div class="fr-firmas">
@@ -568,13 +568,13 @@
                         <div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">
                             ${decodeURIComponent(window.obsEsteticas).toUpperCase()}
                         </div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
+                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
                     `;
                 } else {
-                    // ===== AJUSTE FINAL: 5 renglones cuando no hay observaciones escritas =====
+                    // ===== AJUSTE FINAL: 4 renglones cuando no hay observaciones escritas =====
                     cajaObs.innerHTML = `
                         <div class="fr-obs-title">OBSERVACIONES.</div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
+                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
                     `;
                 }
             }
@@ -618,7 +618,7 @@
                         grupo: registro.grupo, fotos: registro.fotos || null, timestamp: Date.now(), estatus: estatusFinal
                     });
                     docIdFinal = docRef.id;
-                    if(esProgramacionOficina) alert("⏳ BORRADOR GUARDADO. La unidad quedó pre-programada correctamente.");
+                    if(esProgramacionOficina) alert(" BORRADOR GUARDADO. La unidad quedó pre-programada correctamente.");
                 }
 
                 if (window.filaExcelOrigen && window.hojaExcelOrigen) {
@@ -715,7 +715,7 @@
                 let notaComentarios = (reg.comentarios && reg.comentarios.trim() !== '') ? `<div class="mt-2 text-xs bg-amber-50 text-amber-800 border border-amber-200 p-1.5 rounded"><i class="font-bold">Comentarios:</i> ${reg.comentarios}</div>` : '';
 
                 const badgeEstatus = reg.estatus === "PROGRAMADO" ? 
-                    `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded border border-amber-200">⏳ Programado</span>` : 
+                    `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded border border-amber-200"> Programado</span>` : 
                     `<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded border border-green-200">✅ Completado</span>`;
 
                 const tr = document.createElement('tr');
