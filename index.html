@@ -61,7 +61,6 @@
         .ratio-h   { aspect-ratio: 3 / 2; }
         .ratio-lic { aspect-ratio: 4 / 3; }
 
-        /* ===== NUEVO: tarjeta de licencia destacada para SALIDA ===== */
         .licencia-salida-wrap { width: 62%; margin: 10px auto 15px auto; }
         .licencia-salida-wrap .foto-card { border: 2px solid #1a73e8; background-color: #f5f9ff; }
         .licencia-salida-wrap .foto-header-title { background-color: #1a73e8; color: #fff; font-size: 9px; padding: 3px 1px; border-bottom: none; }
@@ -251,10 +250,8 @@
                 <span class="fr-line-fixed" style="width: 150px;" id="fr-km-recepcion"></span>
             </div>
 
-            <!-- ===== Label de carrocería (se oculta en SALIDA) ===== -->
             <div class="fr-label" id="fr-label-carroceria" style="margin-top: 20px; margin-bottom: 10px;">ESTATUS CARROCERÍA (EVIDENCIAS FOTOGRÁFICAS)</div>
             
-            <!-- ===== Grids de carrocería (se ocultan en SALIDA) ===== -->
             <div class="grid-fila1" id="fr-grid-fila1">
                 <div class="foto-card"><div class="foto-header-title">1. VISTA FRONTAL</div><img id="img-front" src="" class="foto-img-element ratio-v" onerror="this.src='https://placehold.co/300x340?text=Sin+Foto+Frontal'"></div>
                 <div class="foto-card"><div class="foto-header-title">5. LICENCIA OPERADOR</div><img id="img-licencia" src="" class="foto-img-element ratio-lic" onerror="this.src='https://placehold.co/400x300?text=Sin+Foto+Licencia'"></div>
@@ -265,7 +262,6 @@
                 <div class="foto-card"><div class="foto-header-title">4. LATERAL IZQUIERDO</div><img id="img-left" src="" class="foto-img-element ratio-h" onerror="this.src='https://placehold.co/400x267?text=Sin+Foto+Izq'"></div>
             </div>
 
-            <!-- ===== NUEVO: licencia destacada, solo visible en SALIDA ===== -->
             <div class="licencia-salida-wrap hidden-hoja" id="fr-licencia-salida">
                 <div class="fr-label" style="margin-top: 20px; margin-bottom: 10px; text-align: center; display: block;">LICENCIA DEL OPERADOR (EVIDENCIA DE SALIDA)</div>
                 <div class="foto-card">
@@ -274,6 +270,8 @@
                 </div>
             </div>
 
+            <!-- Los renglones de OBSERVACIONES se llenan dinámicamente:
+                 ENTRADA = Observaciones Estéticas · SALIDA = Comentario del mecánico (+ obs. estéticas si existen) -->
             <div class="fr-obs-box" id="fr-caja-obs-recepcion">
                 <div class="fr-obs-title">OBSERVACIONES.</div>
                 <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
@@ -539,7 +537,6 @@
 
             document.getElementById('fr-titulo-hoja').innerText = esSalida ? "FORMATO ENTREGA." : "FORMATO RECEPCION.";
 
-            // ===== NUEVO: en SALIDA se oculta carrocería y se muestra solo la licencia destacada =====
             if (esSalida) {
                 document.getElementById('fr-label-carroceria').classList.add('hidden-hoja');
                 document.getElementById('fr-grid-fila1').classList.add('hidden-hoja');
@@ -594,30 +591,46 @@
                 `;
             }
 
-            // Fotos de carrocería (solo tendrán valor en ENTRADA; en SALIDA quedan ocultas)
             if(window.urlFotoFrontal) document.getElementById('img-front').src = window.urlFotoFrontal;
             if(window.urlFotoTrasera) document.getElementById('img-back').src = window.urlFotoTrasera;
             if(window.urlFotoDerecha) document.getElementById('img-right').src = window.urlFotoDerecha;
             if(window.urlFotoIzquierda) document.getElementById('img-left').src = window.urlFotoIzquierda;
             if(window.urlFotoLicencia) document.getElementById('img-licencia').src = window.urlFotoLicencia;
 
+            // =====================================================================
+            // OBSERVACIONES (renglones de la hoja):
+            //  · ENTRADA → se llenan con las "Observaciones Estéticas" (como siempre)
+            //  · SALIDA  → se llenan con el COMENTARIO DEL MECÁNICO; y si además
+            //              alguien escribió Observaciones Estéticas, van en el
+            //              renglón siguiente para que nada se pierda.
+            // =====================================================================
             const cajaObs = document.getElementById('fr-caja-obs-recepcion');
-            if(cajaObs) {
-                if(window.obsEsteticas && window.obsEsteticas.trim() !== '') {
-                    cajaObs.innerHTML = `
-                        <div class="fr-obs-title">OBSERVACIONES.</div>
-                        <div style="font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;">
-                            ${decodeURIComponent(window.obsEsteticas).toUpperCase()}
-                        </div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-                    `;
+            if (cajaObs) {
+                const estiloTexto = "font-size: 11px; font-weight: bold; padding: 2px 0; border-bottom: 1px solid black; min-height: 14px;";
+                let lineasHTML = [];
+
+                if (esSalida) {
+                    if (textoComentarios.trim() !== '') {
+                        lineasHTML.push(`<div style="${estiloTexto}">${textoComentarios}</div>`);
+                    }
+                    if (window.obsEsteticas && window.obsEsteticas.trim() !== '') {
+                        lineasHTML.push(`<div style="${estiloTexto}">${decodeURIComponent(window.obsEsteticas).toUpperCase()}</div>`);
+                    }
                 } else {
-                    cajaObs.innerHTML = `
-                        <div class="fr-obs-title">OBSERVACIONES.</div>
-                        <div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div><div class="fr-obs-line"></div>
-                    `;
+                    if (window.obsEsteticas && window.obsEsteticas.trim() !== '') {
+                        lineasHTML.push(`<div style="${estiloTexto}">${decodeURIComponent(window.obsEsteticas).toUpperCase()}</div>`);
+                    }
                 }
+
+                // Completa con renglones vacíos hasta dejar 4 líneas en total
+                const renglonesVacios = Math.max(0, 4 - lineasHTML.length);
+                let html = `<div class="fr-obs-title">OBSERVACIONES.</div>` + lineasHTML.join("");
+                for (let i = 0; i < renglonesVacios; i++) {
+                    html += `<div class="fr-obs-line"></div>`;
+                }
+                cajaObs.innerHTML = html;
             }
+            // ===== FIN OBSERVACIONES =====
 
             if(!modoSoloLectura && (serviciosMarcados.length > 0 || valorGrupo === "Correctivo")) {
                 guardarEnFirebase({ 
